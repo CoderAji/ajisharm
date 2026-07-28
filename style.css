@@ -511,8 +511,6 @@ body.intro .spatula svg { width: 100%; height: auto; display: block; }
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 3 / 4;
-  object-fit: cover;
   border: 3px solid var(--ink);
   box-shadow: 9px 9px 0 rgba(10, 10, 10, .3);
 }
