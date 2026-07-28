@@ -1,24 +1,33 @@
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const sections = [...document.querySelectorAll("section")];
-const dots = [...document.querySelectorAll(".dot")];
+const navLinks = [...document.querySelectorAll(".nav a")];
 
 // Stagger index for each section's entrance animation.
 sections.forEach(sec => [...sec.children].forEach((el, i) => el.style.setProperty("--i", i)));
 
-// Reveal sections and light the matching frame dots. An IntersectionObserver is
-// far more predictable here than a view-timeline inside a reversed scroller.
+// Reveal sections and mark the active nav entry. An IntersectionObserver is far
+// more predictable here than a view-timeline inside a reversed scroller.
 const reveal = new IntersectionObserver(entries => {
   for (const e of entries) {
     if (!e.isIntersecting) continue;
     e.target.classList.add("in");
-    const i = sections.indexOf(e.target);
-    dots.forEach((d, j) => d.classList.toggle("on", j <= i));
+    navLinks.forEach(a => a.classList.toggle("here", a.hash === "#" + e.target.id));
   }
-}, { threshold: 0.25 });
+}, { threshold: 0.35 });
 
 sections.forEach(s => reveal.observe(s));
 
-// ---- finale: the sandwich is built ----
+// Anchor jumps: the default hash jump is abrupt inside a reversed scroller.
+document.querySelectorAll('a[href^="#s"]').forEach(a => {
+  a.addEventListener("click", ev => {
+    const target = document.querySelector(a.hash);
+    if (!target) return;
+    ev.preventDefault();
+    target.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  });
+});
+
+// ---- finale: the sandwich is complete ----
 const FACES = ["🤤", "😂", "😍", "🥹", "😋", "🤩", "🥳", "😆", "👏", "🔥", "✨", "🥪"];
 
 function celebrate() {
@@ -42,7 +51,7 @@ function celebrate() {
 
 new IntersectionObserver(([e], obs) => {
   if (!e.isIntersecting) return;
-  document.title = "made it.";
+  document.title = "sandwich complete";
   if (!reduced) celebrate();
   obs.disconnect();
-}, { threshold: 0.9 }).observe(document.querySelector("#s7"));
+}, { threshold: 0.9 }).observe(document.querySelector("#s9"));

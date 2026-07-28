@@ -4,105 +4,203 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ajisharm</title>
-<meta name="description" content="Ajitesh Sharma — personal site. Scroll up.">
+<meta name="description" content="Ajitesh Sharma — I build products, study how people learn, and explore the scientific ideas that shape the world.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🥪</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=DM+Mono:wght@300;400;500&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="bg" aria-hidden="true"><div class="bg-dim"></div><div class="grain"></div></div>
 
-<!-- Fixed chrome: exposed-grid framing, brutalist detailing. -->
-<div class="frame" aria-hidden="true">
-  <span class="frame-tl">AJISHARM<span class="sep">/</span>PERSONAL</span>
-  <span class="frame-tr">
-    <i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i>
-    <i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i>
-  </span>
-  <span class="frame-bl">BUILD<span class="sep">/</span>SCROLL UP</span>
-</div>
+<!-- Section index so visitors can jump instead of scrolling the whole stack. -->
+<nav class="nav" aria-label="Sections">
+  <ol>
+    <li><a href="#s9" data-k="10">Contact</a></li>
+    <li><a href="#s8" data-k="09">Principles</a></li>
+    <li><a href="#s7" data-k="08">Questions</a></li>
+    <li><a href="#s6" data-k="07">Learned</a></li>
+    <li><a href="#s5" data-k="06">Timeline</a></li>
+    <li><a href="#s4" data-k="05">Experiments</a></li>
+    <li><a href="#s3" data-k="04">Arkire</a></li>
+    <li><a href="#s2" data-k="03">Right Now</a></li>
+    <li><a href="#s1" data-k="02">Why I Build</a></li>
+    <li><a href="#s0" data-k="01">Home</a></li>
+  </ol>
+</nav>
 
-<!-- Build progress. Decorative twin of the scroll position, so hidden from AT. -->
-<div class="rail" aria-hidden="true">
-  <div class="rail-track"></div>
-  <div class="rail-fill"></div>
-  <div class="rail-knob"></div>
-</div>
+<!-- Progress ring with the sandwich built inside it. One layer per section. -->
+<div class="badge" aria-hidden="true">
+  <svg class="ring" viewBox="0 0 120 120">
+    <defs>
+      <linearGradient id="ringgrad" x1="0" y1="1" x2="0.4" y2="0">
+        <stop offset="0"    stop-color="#0a0a0a"/>
+        <stop offset="0.55" stop-color="#2f4a08"/>
+        <stop offset="1"    stop-color="#6f9c14"/>
+      </linearGradient>
+      <radialGradient id="disc" cx="0.5" cy="0.65" r="0.7">
+        <stop offset="0" stop-color="#d8ff5e"/>
+        <stop offset="1" stop-color="#8fc72a"/>
+      </radialGradient>
+    </defs>
+    <circle class="ring-disc"  cx="60" cy="60" r="50"/>
+    <circle class="ring-track" cx="60" cy="60" r="54"/>
+    <circle class="ring-fill"  cx="60" cy="60" r="54" pathLength="100"/>
+  </svg>
 
-<!-- Fixed 3D stage. Layers stack along Z as the sandwich is assembled. -->
-<div class="stage" aria-hidden="true">
-  <div class="rig">
-    <div class="shadow"></div>
-    <div class="sandwich">
-      <div class="layer bread-bottom" data-step="0"></div>
-      <div class="layer lettuce"      data-step="1"></div>
-      <div class="layer tomato"       data-step="2"></div>
-      <div class="layer cheese"       data-step="3"></div>
-      <div class="layer ham"          data-step="4"></div>
-      <div class="layer ketchup"      data-step="5"></div>
-      <div class="layer bread-top"    data-step="6"></div>
+  <div class="stage">
+    <div class="rig">
+      <div class="sandwich">
+        <div class="layer bread-bottom" data-step="0"></div>
+        <div class="layer lettuce"      data-step="1"></div>
+        <div class="layer tomato"       data-step="2"></div>
+        <div class="layer cheese"       data-step="3"></div>
+        <div class="layer ham"          data-step="4"></div>
+        <div class="layer onion"        data-step="5"></div>
+        <div class="layer pickle"       data-step="6"></div>
+        <div class="layer ketchup"      data-step="7"></div>
+        <div class="layer avocado"      data-step="8"></div>
+        <div class="layer bread-top"    data-step="9"></div>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- Hand-drawn scroll cue. Fades out as soon as the user starts climbing. -->
+<div class="cue" aria-hidden="true">
+  <div class="cue-bounce">
+    <svg class="cue-arrow" viewBox="0 0 44 96" fill="none">
+      <path class="ink shaft" pathLength="100" d="M22 88c-3.5-13 1.5-22-1-33.5C18.7 43 25 33 21.5 18"/>
+      <path class="ink head"  pathLength="100" d="M8.5 33.5C13 27 18.5 20.5 21.5 13.5"/>
+      <path class="ink head2" pathLength="100" d="M35 32c-4-6.5-9-13.5-13.5-18.5"/>
+    </svg>
+    <p class="cue-text">Scroll Up!</p>
   </div>
 </div>
 
 <!-- DOM order == reading order == bottom-to-top on screen. -->
 <main>
+
   <section id="s0" data-n="01" data-part="BOTTOM SLICE">
-    <p class="eyebrow">start here</p>
-    <h1>AJITESH<br>SHARMA</h1>
-    <p class="lede">Start with the bottom slice. Everything worth having gets stacked on top of it.</p>
-    <button class="btn" type="button" aria-label="Scroll up to begin">
-      <span>BUILD IT</span><span class="btn-arrow">↑</span>
-    </button>
+    <h1 class="cond">AJITESH<br>SHARMA</h1>
+    <p class="lede">I build products, study how people learn, and explore the scientific ideas that shape the world.</p>
+    <p class="sub">High school founder working on education, technology, and entrepreneurship.</p>
+    <div class="row">
+      <a class="btn" href="#s4"><span>VIEW PROJECTS</span><span class="btn-arrow">↑</span></a>
+      <a class="btn ghost" href="#s6"><span>READ MY THOUGHTS</span></a>
+      <a class="btn ghost" href="#s9"><span>CONTACT</span></a>
+    </div>
   </section>
 
   <section id="s1" data-n="02" data-part="LETTUCE">
-    <p class="eyebrow">layer two</p>
-    <h2 class="wide">THE<br>GREEN<br>BIT</h2>
-    <p class="lede">Placeholder — your text goes here.</p>
+    <h2 class="cond">WHY I BUILD</h2>
+    <p class="lede">Not a biography. The actual reason.</p>
+    <p class="sub">Building is the fastest way I know to find out whether an idea is real. You can argue about a
+      concept forever; a working thing settles it in a week. Education is where I point that instinct, because it's
+      the one lever that compounds — improve how somebody learns and you improve everything they do afterward.
+      Science is the same habit aimed at the world instead of a product: break it down, test it, keep what survives.</p>
+    <p class="sub">Long term, I want to build things that make good learning cheap and ordinary instead of scarce
+      and expensive.</p>
   </section>
 
   <section id="s2" data-n="03" data-part="TOMATO">
-    <p class="eyebrow">layer three</p>
-    <h2>SOMETHING<br>JUICY</h2>
-    <p class="lede">Placeholder.</p>
+    <h2>RIGHT NOW</h2>
+    <p class="lede">What actually has my attention this month.</p>
+    <ul class="facts">
+      <li><span>📱</span> Building Arkire</li>
+      <li><span>📚</span> Learning product marketing</li>
+      <li><span>🎤</span> Preparing for DECA</li>
+      <li><span>🧠</span> Reading about behavioral psychology</li>
+      <li><span>⚛️</span> Studying AP Chemistry</li>
+    </ul>
   </section>
 
   <section id="s3" data-n="04" data-part="CHEESE">
-    <p class="eyebrow">layer four</p>
-    <h2 class="narrow">THE PART<br>THAT MELTS</h2>
-    <p class="lede">Placeholder.</p>
+    <h2 class="cond">ARKIRE</h2>
+    <p class="lede">The main thing I'm building.</p>
+    <p class="sub"><b>The problem.</b> Placeholder — what's broken, and for whom.</p>
+    <p class="sub"><b>Why I started.</b> Placeholder — the moment it became worth doing.</p>
+    <p class="sub"><b>Where it is.</b> Placeholder — current stage, users, what's next.</p>
+    <p class="sub"><b>Biggest lesson.</b> Placeholder — what you'd tell yourself at the start.</p>
   </section>
 
   <section id="s4" data-n="05" data-part="FILLING">
-    <p class="eyebrow">layer five</p>
-    <h2>SUBSTANCE</h2>
-    <p class="lede">Placeholder.</p>
+    <h2>EXPERIMENTS</h2>
+    <p class="lede">Small things built to answer a question. Some worked.</p>
+    <ul class="facts">
+      <li><span>🧪</span> AI tools</li>
+      <li><span>🌐</span> Websites and landing pages</li>
+      <li><span>🧩</span> Chrome extensions</li>
+      <li><span>🎨</span> Design concepts</li>
+      <li><span>🥪</span> This site — built to see how far a single scroll could go</li>
+    </ul>
   </section>
 
-  <section id="s5" data-n="06" data-part="KETCHUP">
-    <p class="eyebrow">layer six</p>
-    <h2 class="wide">FLOURISH</h2>
-    <p class="lede">Placeholder.</p>
+  <section id="s5" data-n="06" data-part="ONION">
+    <h2 class="cond">TIMELINE</h2>
+    <ol class="timeline">
+      <li><b>2024</b><span>Started learning marketing.</span></li>
+      <li><b>2025</b><span>Joined DECA. Began building Arkire.</span></li>
+      <li><b>2026</b><span>Launched this site. Grew the community. Kept shipping.</span></li>
+    </ol>
   </section>
 
-  <section id="s6" data-n="07" data-part="TOP SLICE">
-    <p class="eyebrow">layer seven</p>
-    <h2 class="narrow">CLOSE<br>IT UP</h2>
-    <p class="lede">Placeholder.</p>
+  <section id="s6" data-n="07" data-part="PICKLE">
+    <h2>THINGS I'VE LEARNED</h2>
+    <p class="lede">Short pieces, about two minutes each.</p>
+    <ul class="cards">
+      <li>Why most startup ideas fail</li>
+      <li>Marketing isn't about selling</li>
+      <li>The hardest part of building is consistency</li>
+      <li>Lessons from AP Chemistry</li>
+      <li>What science teaches entrepreneurs</li>
+    </ul>
   </section>
 
-  <section id="s7" data-n="08" data-part="COMPLETE" class="finale">
-    <p class="eyebrow">assembled</p>
-    <h2>MADE IT.</h2>
-    <p class="lede">Placeholder — closing line, links, contact.</p>
-    <a class="btn" href="mailto:sharmaa.sks@gmail.com">
-      <span>SAY HELLO</span><span class="btn-arrow">→</span>
-    </a>
+  <section id="s7" data-n="08" data-part="KETCHUP">
+    <h2 class="cond">QUESTIONS I'M EXPLORING</h2>
+    <p class="lede">One answered every month.</p>
+    <ul class="cards">
+      <li>Why do humans cooperate?</li>
+      <li>How did language evolve?</li>
+      <li>Why do companies become monopolies?</li>
+      <li>What makes products go viral?</li>
+      <li>Could education become genuinely personalized with AI?</li>
+      <li>Why do plants and animals evolve so differently?</li>
+    </ul>
   </section>
+
+  <section id="s8" data-n="09" data-part="AVOCADO">
+    <h2>PRINCIPLES</h2>
+    <ul class="cards">
+      <li>Build before you're ready</li>
+      <li>Stay curious</li>
+      <li>Learn publicly</li>
+      <li>Consistency compounds</li>
+      <li>Understand first principles</li>
+    </ul>
+    <p class="lede">Skills, grouped rather than rated.</p>
+    <div class="skills">
+      <div><b>Marketing</b><span>Copywriting · Branding · SEO</span></div>
+      <div><b>Business</b><span>Pitching · Product strategy · User research</span></div>
+      <div><b>Technical</b><span>Next.js · TypeScript · Tailwind · AI tools</span></div>
+      <div><b>Design</b><span>Figma · UI thinking · Dashboards</span></div>
+    </div>
+  </section>
+
+  <section id="s9" data-n="10" data-part="TOP SLICE" class="finale">
+    <h2 class="cond">SANDWICH<br>COMPLETE</h2>
+    <p class="lede">That's the stack. Say hello.</p>
+    <div class="row">
+      <a class="btn" href="mailto:sharmaa.sks@gmail.com"><span>EMAIL</span><span class="btn-arrow">→</span></a>
+      <a class="btn ghost" href="#" rel="me"><span>LINKEDIN</span></a>
+      <a class="btn ghost" href="#" rel="me"><span>GITHUB</span></a>
+      <a class="btn ghost" href="#"><span>RESUME</span></a>
+    </div>
+  </section>
+
 </main>
 
 <script src="script.js"></script>
