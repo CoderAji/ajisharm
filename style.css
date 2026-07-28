@@ -575,9 +575,9 @@ body.intro .spatula svg { width: 100%; height: auto; display: block; }
 /* ---------- hero photo + hand-drawn annotations ---------- */
 .me {
   position: absolute;
-  right: 7vw; top: 50%;
-  translate: 0 -54%;
-  width: clamp(168px, 15.5vw, 236px);
+  right: 13vw; top: 50%;
+  translate: 0 -38%;
+  width: clamp(206px, 19vw, 296px);
   margin: 0;
   rotate: -3deg;
 }
