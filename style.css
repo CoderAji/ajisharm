@@ -612,12 +612,11 @@ body.intro .spatula svg { width: 100%; height: auto; display: block; }
 }
 
 /* ---------- fire cursor ----------
-   Emoji is written as an XML entity rather than a raw glyph so the data URI
-   stays pure ASCII and survives URL parsing. 32px is the size ceiling browsers
-   reliably honour; the hotspot sits at the flame's tip. */
-body {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Ctext y='26' font-size='26'%3E%26%23128293;%3C/text%3E%3C/svg%3E") 8 4, auto;
-}
+   A drawn black flame rather than the emoji: 20px matches the default arrow,
+   and a vector path rasterises identically everywhere instead of depending on
+   the visitor's emoji font. Same size on interactive elements — the buttons
+   already invert on hover, so the cursor doesn't need to carry that signal. */
+body,
 .btn, .nav-current, .nav-list a, a, button, .cards li {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Ctext y='28' font-size='30'%3E%26%23128293;%3C/text%3E%3C/svg%3E") 9 4, pointer;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath fill='%230a0a0a' d='M10 18.6c-3.6 0-6.5-2.7-6.5-6.2 0-3.5 2.7-5.5 4-8.4.5-1.1 2.1-1 2.4.2.4 1.6 1.1 2.6 2.2 3.9 1.7 2 4.4 3.6 4.4 6.4 0 3.4-2.9 6.1-6.5 6.1z'/%3E%3C/svg%3E") 8 2, auto;
 }
