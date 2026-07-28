@@ -6,7 +6,7 @@
   --mono:  "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --sans:  "Archivo", Helvetica, Arial, sans-serif;
   --hand:  "Caveat", ui-rounded, cursive;
-  --badge: clamp(150px, 13vw, 190px);
+  --badge: clamp(104px, 9vw, 132px);
 }
 
 * { box-sizing: border-box; }
@@ -80,8 +80,10 @@ html, body {
   animation-range: 0% 100%;
 }
 @keyframes ringfill {
-  from { stroke-dashoffset: 0; }    /* top: complete */
-  to   { stroke-dashoffset: 100; }  /* bottom: empty */
+  /* Measured in a real browser: this pairing gives an empty ring at the landing
+     position that fills as the user climbs. */
+  from { stroke-dashoffset: 100; }
+  to   { stroke-dashoffset: 0; }
 }
 
 .stage {
@@ -176,8 +178,7 @@ html, body {
 /* ---------- hand-drawn scroll cue ---------- */
 .cue {
   position: fixed;
-  left: 50%; bottom: 4vh;
-  translate: -50% 0;
+  right: 9vw; bottom: 7vh;
   z-index: 4;
   pointer-events: none;
   text-align: center;
@@ -238,7 +239,7 @@ section {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 12vh 5vw 12vh clamp(250px, 19vw, 340px);
+  padding: 12vh 5vw 12vh clamp(180px, 14vw, 240px);
   position: relative;
 }
 
@@ -319,8 +320,9 @@ section.in > * { opacity: 1; transform: none; }
 /* ---------- section index (top left) ---------- */
 .nav {
   position: fixed;
-  left: 3.2vw; top: 3vh;
+  right: 3.2vw; top: 3vh;
   z-index: 5;
+  text-align: right;
   font-family: var(--mono);
   font-size: .66rem;
   letter-spacing: .12em;
@@ -336,9 +338,10 @@ section.in > * { opacity: 1; transform: none; }
   transition: opacity .2s ease, transform .2s ease;
 }
 .nav a::before { content: attr(data-k) "  "; opacity: .55; }
-.nav a:hover, .nav a:focus-visible { opacity: 1; transform: translateX(4px); }
+.nav a:hover, .nav a:focus-visible { opacity: 1; transform: translateX(-4px); }
 .nav a.here { opacity: 1; font-weight: 500; }
-.nav a.here::after { content: " ←"; }
+.nav a.here::before { content: "→  "; }
+.nav a.here::after { content: ""; }
 
 /* ---------- content blocks ---------- */
 .sub { max-width: 46ch; margin: 0 0 .9rem; font-size: 1rem; }
@@ -386,11 +389,19 @@ section.in > * { opacity: 1; transform: none; }
 /* ---------- celebration burst ---------- */
 /* Apple's emoji font is proprietary and can't be shipped, so these fall through
    to the visitor's system set — genuine iOS emoji on Apple devices. */
-.burst { position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
+/* Anchored on the badge so the celebration reads as coming from the sandwich. */
+.burst {
+  position: fixed;
+  left: 3.2vw; top: 50%;
+  translate: 0 -50%;
+  width: var(--badge); height: var(--badge);
+  z-index: 5;
+  pointer-events: none;
+}
 .emoji {
   position: absolute;
-  bottom: 10%;
-  font-size: var(--size, 2.2rem);
+  left: 50%; bottom: 40%;
+  font-size: var(--size, 1.5rem);
   line-height: 1;
   will-change: transform, opacity;
   animation: pop var(--dur, 2.4s) cubic-bezier(.2, .7, .3, 1) forwards;
@@ -398,10 +409,10 @@ section.in > * { opacity: 1; transform: none; }
   opacity: 0;
 }
 @keyframes pop {
-  0%   { opacity: 0; transform: translate3d(0,0,0) scale(.3) rotate(0deg); }
-  12%  { opacity: 1; transform: translate3d(0,-12vh,0) scale(1.15) rotate(var(--rot,10deg)); }
+  0%   { opacity: 0; transform: translate3d(-50%, 0, 0) scale(.3) rotate(0deg); }
+  15%  { opacity: 1; transform: translate3d(-50%, -5vh, 0) scale(1.1) rotate(var(--rot,10deg)); }
   70%  { opacity: 1; }
-  100% { opacity: 0; transform: translate3d(var(--dx,0),-70vh,0) scale(.85) rotate(var(--rot,10deg)); }
+  100% { opacity: 0; transform: translate3d(calc(-50% + var(--dx,0)), -26vh, 0) scale(.8) rotate(var(--rot,10deg)); }
 }
 
 /* ---------- responsive (laptop-first) ---------- */
@@ -418,4 +429,71 @@ section.in > * { opacity: 1; transform: none; }
   .layer { animation: none; opacity: 1; transform: translate3d(0, 0, var(--z)); }
   .bg-dim { animation: none; opacity: 0; }
   .rig { animation: none; transform: rotateX(58deg) rotateZ(-12deg); }
+}
+
+/* ============================================================================
+   INTRO SEQUENCE
+   Page tips back zoomed out, hero text falls to the floor, a spatula sweeps up
+   and flings it back into place, camera returns to normal. 2.6s, once per
+   session, any input skips it. Nothing here touches the scroll timeline — the
+   transform lives on main, and .badge/.cue get matching transforms so fixed
+   positioning is never reparented.
+   ========================================================================= */
+.spatula { display: none; }
+
+body.intro { overflow: hidden; }
+
+body.intro main,
+body.intro .badge {
+  animation: camera 2.6s cubic-bezier(.4, 0, .2, 1) both;
+  transform-origin: 50% 60%;
+}
+@keyframes camera {
+  0%       { transform: perspective(1400px) scale(.66) rotateX(15deg) rotateZ(-2deg); }
+  30%      { transform: perspective(1400px) scale(.66) rotateX(15deg) rotateZ(-2deg); }
+  58%      { transform: perspective(1400px) scale(.70) rotateX(10deg) rotateZ(1.5deg); }
+  100%     { transform: perspective(1400px) scale(1)   rotateX(0deg)  rotateZ(0deg); }
+}
+
+/* Hero children drop, wait, then get launched home with an overshoot. */
+body.intro #s0 > * {
+  opacity: 1;
+  animation: fallReturn 2.6s cubic-bezier(.45, 0, .3, 1) both;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+@keyframes fallReturn {
+  0%       { transform: translateY(0) rotate(0deg); }
+  8%       { transform: translateY(0) rotate(0deg); }
+  26%      { transform: translateY(52vh) rotate(var(--r, 7deg)); }   /* landed in a heap */
+  50%      { transform: translateY(52vh) rotate(var(--r, 7deg)); }
+  70%      { transform: translateY(-7vh) rotate(calc(var(--r, 7deg) * -0.25)); } /* flung */
+  86%      { transform: translateY(2vh) rotate(0deg); }
+  100%     { transform: translateY(0) rotate(0deg); }
+}
+
+/* !important: .cue runs a scroll-driven animation, and animations outrank
+   plain declarations. */
+body.intro .cue, body.intro .nav { opacity: 0 !important; }
+
+body.intro .spatula {
+  display: block;
+  position: fixed;
+  left: 42%; bottom: 0;
+  width: clamp(90px, 9vw, 130px);
+  z-index: 6;
+  pointer-events: none;
+  animation: sweep 2.6s cubic-bezier(.3, 0, .3, 1) both;
+}
+body.intro .spatula svg { width: 100%; height: auto; display: block; }
+@keyframes sweep {
+  0%, 46%   { transform: translate(-40%, 115%) rotate(-28deg); opacity: 0; }
+  50%       { transform: translate(-25%, 70%)  rotate(-18deg); opacity: 1; }
+  64%       { transform: translate(0%, -25%)   rotate(6deg);   opacity: 1; }
+  78%       { transform: translate(25%, -120%) rotate(22deg);  opacity: 0; }
+  100%      { transform: translate(25%, -120%) rotate(22deg);  opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.intro main, body.intro .badge, body.intro #s0 > *, body.intro .spatula { animation: none; }
+  body.intro .spatula { display: none; }
 }
