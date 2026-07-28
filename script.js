@@ -10,26 +10,49 @@ let navPinned = false;   // set when the user opens it by hand
 // Stagger index for each section's entrance animation.
 sections.forEach(sec => [...sec.children].forEach((el, i) => el.style.setProperty("--i", i)));
 
-// ---- intro: tip back, drop the hero, spatula flings it home ----
+// ---- intro: page flips like a pancake, letters drop, spatula rights it ----
 // Once per session, skippable, and skipped outright for reduced motion.
+const BACKDROPS = ["#2f6bd8", "#7a3fd0", "#e0552b", "#d92e78", "#128a8a", "#1f3fa8"];
+
 (function intro() {
   if (reduced || sessionStorage.getItem("introSeen")) return;
   sessionStorage.setItem("introSeen", "1");
 
+  document.documentElement.style.setProperty(
+    "--introbg", BACKDROPS[Math.floor(Math.random() * BACKDROPS.length)]);
+
   const hero = document.querySelector("#s0");
   hero.classList.add("in");                       // no fade-in fighting the fall
-  // Alternate the tumble direction so the heap doesn't look mechanical.
-  [...hero.children].forEach((el, i) => el.style.setProperty("--r", (i % 2 ? 1 : -1) * (5 + i * 3) + "deg"));
+
+  // Split the headline into characters so they fall individually.
+  const h1 = hero.querySelector("h1");
+  let n = 0;
+  for (const node of [...h1.childNodes]) {
+    if (node.nodeType !== Node.TEXT_NODE) continue;   // leave <br> alone
+    const frag = document.createDocumentFragment();
+    for (const char of node.textContent) {
+      if (char === " ") { frag.append(" "); continue; }
+      const span = document.createElement("span");
+      span.className = "ch";
+      span.textContent = char;
+      span.style.setProperty("--c", n);
+      span.style.setProperty("--cr", (n % 2 ? 1 : -1) * (8 + (n % 5) * 6) + "deg");
+      frag.append(span);
+      n++;
+    }
+    node.replaceWith(frag);
+  }
+
+  [...hero.children].forEach((el, i) =>
+    el.style.setProperty("--r", (i % 2 ? 1 : -1) * (5 + i * 3) + "deg"));
 
   document.body.classList.add("intro");
 
   const end = () => {
     document.body.classList.remove("intro");
-    for (const ev of ["pointerdown", "keydown", "wheel", "touchstart"]) {
-      removeEventListener(ev, end);
-    }
+    for (const ev of ["pointerdown", "keydown", "wheel", "touchstart"]) removeEventListener(ev, end);
   };
-  const timer = setTimeout(end, 2600);
+  const timer = setTimeout(end, 2900);
   for (const ev of ["pointerdown", "keydown", "wheel", "touchstart"]) {
     addEventListener(ev, () => { clearTimeout(timer); end(); }, { once: true, passive: true });
   }

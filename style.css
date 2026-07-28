@@ -486,68 +486,89 @@ section.in > * { opacity: 1; transform: none; }
 
 /* ============================================================================
    INTRO SEQUENCE
-   Page tips back zoomed out, hero text falls to the floor, a spatula sweeps up
-   and flings it back into place, camera returns to normal. 2.6s, once per
-   session, any input skips it. Nothing here touches the scroll timeline — the
-   transform lives on main, and .badge/.cue get matching transforms so fixed
-   positioning is never reparented.
+   The site sits as a small rectangle on a coloured backdrop, pancake-flips on
+   the X axis, its letters drop off, then a spatula sweeps in, flips it upright
+   and the letters land back. 2.9s, once per session, any input skips it.
    ========================================================================= */
 .spatula { display: none; }
 
-body.intro { overflow: hidden; }
+body.intro { overflow: hidden; background: var(--introbg, #2f6bd8); }
 
-body.intro main,
-body.intro .badge {
-  animation: camera 2.6s cubic-bezier(.4, 0, .2, 1) both;
-  transform-origin: 50% 60%;
+/* The lime field scales with the page so the backdrop shows around it. */
+body.intro .bg,
+body.intro main {
+  animation: camera 2.9s cubic-bezier(.45, 0, .25, 1) both;
+  transform-origin: 50% 50%;
 }
+body.intro .bg { border: 3px solid var(--ink); }
+
 @keyframes camera {
-  0%       { transform: perspective(1400px) scale(.66) rotateX(15deg) rotateZ(-2deg); }
-  30%      { transform: perspective(1400px) scale(.66) rotateX(15deg) rotateZ(-2deg); }
-  58%      { transform: perspective(1400px) scale(.70) rotateX(10deg) rotateZ(1.5deg); }
-  100%     { transform: perspective(1400px) scale(1)   rotateX(0deg)  rotateZ(0deg); }
+  0%   { transform: perspective(1600px) scale(.6) rotateX(0deg); }
+  14%  { transform: perspective(1600px) scale(.6) rotateX(0deg); }
+  34%  { transform: perspective(1600px) scale(.6) rotateX(180deg); }   /* the flip */
+  58%  { transform: perspective(1600px) scale(.6) rotateX(180deg); }
+  76%  { transform: perspective(1600px) scale(.63) rotateX(360deg); }  /* flipped upright */
+  100% { transform: perspective(1600px) scale(1) rotateX(360deg); }
 }
 
-/* Hero children drop, wait, then get launched home with an overshoot. */
-body.intro #s0 > * {
+/* Individual letters drop out of the headline while the page is upside down. */
+body.intro .ch {
+  display: inline-block;
+  animation: chFall 2.9s cubic-bezier(.4, 0, .3, 1) both;
+  animation-delay: calc(var(--c, 0) * 22ms);
+}
+@keyframes chFall {
+  0%, 34% { transform: translateY(0) rotate(0deg); }
+  52%     { transform: translateY(-46vh) rotate(var(--cr, 12deg)); }
+  68%     { transform: translateY(-46vh) rotate(var(--cr, 12deg)); }
+  86%     { transform: translateY(3vh) rotate(0deg); }
+  100%    { transform: translateY(0) rotate(0deg); }
+}
+
+/* The rest of the hero drops as blocks. */
+body.intro #s0 > *:not(h1) {
   opacity: 1;
-  animation: fallReturn 2.6s cubic-bezier(.45, 0, .3, 1) both;
-  animation-delay: calc(var(--i, 0) * 55ms);
+  animation: fallReturn 2.9s cubic-bezier(.45, 0, .3, 1) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
 }
 @keyframes fallReturn {
-  0%       { transform: translateY(0) rotate(0deg); }
-  8%       { transform: translateY(0) rotate(0deg); }
-  26%      { transform: translateY(52vh) rotate(var(--r, 7deg)); }   /* landed in a heap */
-  50%      { transform: translateY(52vh) rotate(var(--r, 7deg)); }
-  70%      { transform: translateY(-7vh) rotate(calc(var(--r, 7deg) * -0.25)); } /* flung */
-  86%      { transform: translateY(2vh) rotate(0deg); }
-  100%     { transform: translateY(0) rotate(0deg); }
+  0%, 34% { transform: translateY(0) rotate(0deg); }
+  54%     { transform: translateY(-42vh) rotate(var(--r, 7deg)); }
+  68%     { transform: translateY(-42vh) rotate(var(--r, 7deg)); }
+  86%     { transform: translateY(2vh) rotate(0deg); }
+  100%    { transform: translateY(0) rotate(0deg); }
 }
+body.intro #s0 > h1 { opacity: 1; }
 
 /* !important: .cue runs a scroll-driven animation, and animations outrank
    plain declarations. */
-body.intro .cue, body.intro .nav { opacity: 0 !important; }
+/* .badge is viewport-fixed, so it can't ride the card's transform — hide it and
+   let it return when the intro ends. */
+body.intro .cue, body.intro .nav, body.intro .badge { opacity: 0 !important; }
 
 body.intro .spatula {
   display: block;
   position: fixed;
-  left: 42%; bottom: 0;
-  width: clamp(90px, 9vw, 130px);
+  left: 44%; bottom: 0;
+  width: clamp(84px, 8vw, 120px);
   z-index: 6;
   pointer-events: none;
-  animation: sweep 2.6s cubic-bezier(.3, 0, .3, 1) both;
+  animation: sweep 2.9s cubic-bezier(.3, 0, .3, 1) both;
 }
 body.intro .spatula svg { width: 100%; height: auto; display: block; }
 @keyframes sweep {
-  0%, 46%   { transform: translate(-40%, 115%) rotate(-28deg); opacity: 0; }
-  50%       { transform: translate(-25%, 70%)  rotate(-18deg); opacity: 1; }
-  64%       { transform: translate(0%, -25%)   rotate(6deg);   opacity: 1; }
-  78%       { transform: translate(25%, -120%) rotate(22deg);  opacity: 0; }
-  100%      { transform: translate(25%, -120%) rotate(22deg);  opacity: 0; }
+  0%, 58%  { transform: translate(-45%, 120%) rotate(-30deg); opacity: 0; }
+  62%      { transform: translate(-28%, 62%)  rotate(-18deg); opacity: 1; }
+  74%      { transform: translate(2%, -30%)   rotate(8deg);   opacity: 1; }
+  86%      { transform: translate(28%, -125%) rotate(24deg);  opacity: 0; }
+  100%     { transform: translate(28%, -125%) rotate(24deg);  opacity: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body.intro main, body.intro .badge, body.intro #s0 > *, body.intro .spatula { animation: none; }
+  body.intro .bg, body.intro main,
+  body.intro .ch, body.intro #s0 > *, body.intro .spatula { animation: none; }
+  body.intro { background: none; }
+  body.intro .bg { border: 0; }
   body.intro .spatula { display: none; }
 }
 
