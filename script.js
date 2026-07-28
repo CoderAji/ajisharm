@@ -80,3 +80,7 @@ new IntersectionObserver(([e], obs) => {
   if (!reduced) celebrate();
   obs.disconnect();
 }, { threshold: 0.9 }).observe(document.querySelector("#s9"));
+
+// The hero photo is optional — drop me.jpg in the project root to switch it on.
+const photo = document.querySelector(".me img");
+if (photo) photo.addEventListener("error", () => photo.closest(".me").remove());

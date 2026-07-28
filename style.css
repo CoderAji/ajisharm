@@ -497,3 +497,44 @@ body.intro .spatula svg { width: 100%; height: auto; display: block; }
   body.intro main, body.intro .badge, body.intro #s0 > *, body.intro .spatula { animation: none; }
   body.intro .spatula { display: none; }
 }
+
+/* ---------- hero photo + hand-drawn annotations ---------- */
+.me {
+  position: absolute;
+  right: 7vw; top: 50%;
+  translate: 0 -54%;
+  width: clamp(168px, 15.5vw, 236px);
+  margin: 0;
+  rotate: -3deg;
+}
+.me img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border: 3px solid var(--ink);
+  box-shadow: 9px 9px 0 rgba(10, 10, 10, .3);
+}
+
+.scribble {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: .1em;
+  font-family: var(--hand);
+  font-weight: 700;
+  font-size: clamp(1.15rem, 1.5vw, 1.6rem);
+  white-space: nowrap;
+}
+.scribble.top    { top: -2.7rem;  left: -3.4rem; rotate: -7deg; }
+.scribble.bottom { bottom: -3rem; right: -2.6rem; rotate: 5deg; }
+.nib { width: clamp(42px, 3.6vw, 62px); height: auto; overflow: visible; }
+.nib .ink { stroke-width: 4.5; }
+.d1 { animation-delay: .5s; }
+.d2 { animation-delay: .6s; }
+
+/* ---------- house rule: sentences are all-caps or no-caps, never sentence case */
+.lede, .sub, .facts li, .cards li, .timeline span, .skills span, .scribble, .cue-text {
+  text-transform: lowercase;
+}
