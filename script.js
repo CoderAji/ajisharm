@@ -1,17 +1,22 @@
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const sections = [...document.querySelectorAll("section")];
+const dots = [...document.querySelectorAll(".dot")];
 
 // Stagger index for each section's entrance animation.
-document.querySelectorAll("section").forEach(sec => {
-  [...sec.children].forEach((el, i) => el.style.setProperty("--i", i));
-});
+sections.forEach(sec => [...sec.children].forEach((el, i) => el.style.setProperty("--i", i)));
 
-// Reveal sections as they come into view. Cheaper and far more predictable than
-// a view-timeline inside a column-reverse scroller.
+// Reveal sections and light the matching frame dots. An IntersectionObserver is
+// far more predictable here than a view-timeline inside a reversed scroller.
 const reveal = new IntersectionObserver(entries => {
-  for (const e of entries) if (e.isIntersecting) e.target.classList.add("in");
+  for (const e of entries) {
+    if (!e.isIntersecting) continue;
+    e.target.classList.add("in");
+    const i = sections.indexOf(e.target);
+    dots.forEach((d, j) => d.classList.toggle("on", j <= i));
+  }
 }, { threshold: 0.25 });
 
-document.querySelectorAll("section").forEach(sec => reveal.observe(sec));
+sections.forEach(s => reveal.observe(s));
 
 // ---- finale: the sandwich is built ----
 const FACES = ["🤤", "😂", "😍", "🥹", "😋", "🤩", "🥳", "😆", "👏", "🔥", "✨", "🥪"];

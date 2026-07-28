@@ -1,11 +1,10 @@
 :root {
-  --acid:  #eaff77;
-  --lime:  #b7e53d;
-  --deep:  #74a520;
-  --ink:   #16210a;
-  --olive: #3d5610;
-  --cream: #fbffe8;
-  --ease-out-back: cubic-bezier(.34, 1.56, .64, 1);
+  --acid:  #c3ff2e;
+  --lime:  #a6e82a;
+  --deep:  #7fc016;
+  --ink:   #0a0a0a;
+  --mono:  "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sans:  "Archivo", Helvetica, Arial, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -14,46 +13,80 @@ html, body {
   height: 100%;
   margin: 0;
   color: var(--ink);
-  font-family: "Newsreader", Georgia, serif;
+  font-family: var(--sans);
   font-size: 17px;
-  line-height: 1.6;
-  /* .stage and .bg are siblings of main, not descendants — without this the
-     --page timeline name is out of scope and nothing animates on scroll. */
+  line-height: 1.5;
+  /* .stage, .bg and .rail are siblings of main, not descendants — without this
+     the --page timeline name is out of scope and nothing animates on scroll. */
   timeline-scope: --page;
 }
 
-/* ---------- background: lime mesh that brightens as the sandwich builds ---- */
+/* ============================================================================
+   SCROLL DIRECTION — read this before touching any animation-range below.
+   In this column-reverse scroller the timeline runs 100% at the visual BOTTOM
+   (where the user lands) down to 0% at the TOP. Progress therefore DECREASES
+   as the user scrolls up and builds the sandwich.
+   Every @keyframes here is authored `from` = low progress (top, assembled) and
+   `to` = high progress (bottom, nothing built yet). It reads backwards on the
+   page but it is the only orientation that makes fill-mode hold the right state
+   outside each range.
+   ========================================================================= */
+
+/* ---------- background ---------- */
 .bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
 
 .bg::before {
   content: "";
   position: absolute; inset: 0;
   background:
-    radial-gradient(120% 80% at 15% 105%, #cdf24e 0%, transparent 60%),
-    radial-gradient(90% 70% at 95% -10%, #f4ff9c 0%, transparent 55%),
-    linear-gradient(178deg, var(--acid) 0%, var(--lime) 55%, #9ed12e 100%);
+    radial-gradient(120% 80% at 12% 100%, #d8ff5e 0%, transparent 62%),
+    linear-gradient(176deg, var(--acid) 0%, var(--lime) 58%, #8fd11f 100%);
 }
 
-/* Cross-faded rather than interpolating gradient stops — no @property needed,
-   and it degrades to the bright state if scroll timelines are unsupported. */
 .bg-dim {
   position: absolute; inset: 0;
-  background: linear-gradient(180deg, #a4d033 0%, var(--deep) 100%);
-  opacity: .85;
+  background: linear-gradient(180deg, #8fc72a 0%, var(--deep) 100%);
   animation: brighten linear both;
   animation-timeline: --page;
   animation-range: 0% 100%;
 }
-@keyframes brighten { from { opacity: .85; } to { opacity: 0; } }
+@keyframes brighten {
+  from { opacity: 0; }     /* top: fully built, brightest */
+  to   { opacity: .8; }    /* bottom: nothing built, dimmest */
+}
 
 .grain {
   position: absolute; inset: 0;
-  opacity: .28;
+  opacity: .22;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* ---------- scroller: parked at the visual bottom on load, no JS ---------- */
+/* ---------- fixed frame (exposed grid) ---------- */
+.frame {
+  position: fixed; inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  font-family: var(--mono);
+  font-size: .68rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+.frame > span { position: absolute; }
+.frame-tl { top: 2.2vh; left: 2.4vw; }
+.frame-tr { top: 2.2vh; right: 2.4vw; display: flex; gap: 6px; align-items: center; }
+.frame-bl { bottom: 2.2vh; left: 2.4vw; }
+.sep { opacity: .45; margin: 0 .5em; }
+
+.dot {
+  width: 7px; height: 7px;
+  border: 1.5px solid var(--ink);
+  background: transparent;
+  transition: background .3s ease, transform .3s ease;
+}
+.dot.on { background: var(--ink); transform: scale(1.35); }
+
+/* ---------- scroller ---------- */
 main {
   height: 100%;
   overflow-y: auto;
@@ -64,182 +97,155 @@ main {
 
 section {
   flex: 0 0 auto;      /* flex items shrink by default; without this the last
-                          section is unreachable and the timeline never hits 100% */
+                          section is unreachable and the timeline never hits 0% */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 10vh 6vw;
-  max-width: 48vw;
+  padding: 10vh 6vw 10vh 7.5vw;
+  max-width: 56vw;
   position: relative;
 }
 
-/* Oversized outlined section numeral, offset off the text column. */
+/* Hard rule + mono slug above every headline. */
 section::before {
-  content: attr(data-n);
-  position: absolute;
-  top: 12vh; left: 6vw;
-  font-family: "Fraunces", serif;
-  font-variation-settings: "opsz" 144, "wght" 700, "WONK" 1;
-  font-size: clamp(4rem, 9vw, 8rem);
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1.5px rgba(22, 33, 10, .22);
-  pointer-events: none;
+  content: attr(data-n) " / 08 ———— " attr(data-part);
+  font-family: var(--mono);
+  font-size: .7rem;
+  letter-spacing: .18em;
+  padding-bottom: .9rem;
+  margin-bottom: 1.6rem;
+  border-bottom: 2px solid var(--ink);
+  width: min(100%, 34rem);
 }
 
 /* ---------- type ---------- */
 h1, h2 {
-  margin: 0 0 .35em;
-  line-height: .92;
-  letter-spacing: -.035em;
-  text-wrap: balance;
+  margin: 0 0 .4em;
+  font-weight: 900;
+  font-size: clamp(2.8rem, 7.2vw, 6.4rem);
+  line-height: .88;
+  letter-spacing: -.03em;
+  text-transform: uppercase;
+  font-variation-settings: "wdth" 100, "wght" 900;
 }
+h1 { font-size: clamp(3rem, 8vw, 7rem); }
 
-h1 {
-  font-family: "Fraunces", serif;
-  font-variation-settings: "opsz" 144, "wght" 800, "SOFT" 40, "WONK" 1;
-  font-size: clamp(3.2rem, 9vw, 7.5rem);
-}
-h1 em, h2 em {
-  font-style: italic;
-  font-variation-settings: "opsz" 144, "wght" 400, "SOFT" 90, "WONK" 1;
-  color: var(--olive);
-}
-
-h2 { font-size: clamp(2.6rem, 6.5vw, 5.5rem); }
-
-/* Three display voices, rotated across sections so no two neighbours match. */
-.f-a { font-family: "Fraunces", serif; font-variation-settings: "opsz" 144, "wght" 800, "SOFT" 30, "WONK" 1; }
-.f-b { font-family: "Bricolage Grotesque", sans-serif; font-variation-settings: "opsz" 96, "wght" 800; letter-spacing: -.05em; }
-.f-c { font-family: "Newsreader", serif; font-style: italic; font-weight: 300; letter-spacing: -.02em; }
+/* Width axis does the "different fonts at times" work without a fourth family. */
+.narrow { font-variation-settings: "wdth" 70, "wght" 900; letter-spacing: -.01em; }
+.wide   { font-variation-settings: "wdth" 125, "wght" 800; letter-spacing: -.045em; }
 
 .eyebrow {
-  font-family: "Bricolage Grotesque", sans-serif;
-  font-variation-settings: "opsz" 12, "wght" 600;
+  font-family: var(--mono);
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: .22em;
-  font-size: .72rem;
-  color: var(--olive);
-  margin: 0 0 1.4em;
+  letter-spacing: .2em;
+  font-size: .7rem;
+  margin: 0 0 1.1em;
+  opacity: .62;
 }
 
 .lede {
-  font-size: clamp(1.05rem, 1.4vw, 1.3rem);
-  max-width: 32ch;
-  margin: 0 0 1.6em;
-  color: #223110;
+  font-size: clamp(1rem, 1.25vw, 1.18rem);
+  font-weight: 400;
+  max-width: 34ch;
+  margin: 0 0 2rem;
 }
 
 /* ---------- microinteractions ---------- */
-/* Entrance stagger; .in is set by the IntersectionObserver in script.js. */
 section > * {
   opacity: 0;
-  transform: translateY(18px);
-  transition: opacity .7s ease, transform .7s var(--ease-out-back);
-  transition-delay: calc(var(--i, 0) * 90ms);
+  transform: translateY(16px);
+  transition: opacity .6s ease, transform .6s cubic-bezier(.22, 1, .36, 1);
+  transition-delay: calc(var(--i, 0) * 80ms);
 }
 section.in > * { opacity: 1; transform: none; }
 
-.cue, .btn {
+.btn {
   align-self: flex-start;
   display: inline-flex;
   align-items: center;
-  gap: .6em;
-  font-family: "Bricolage Grotesque", sans-serif;
-  font-variation-settings: "opsz" 12, "wght" 700;
-  font-size: .82rem;
+  gap: .8em;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: .78rem;
   text-transform: uppercase;
-  letter-spacing: .14em;
-  color: var(--cream);
+  letter-spacing: .16em;
+  color: var(--acid);
   background: var(--ink);
-  border: 0;
-  border-radius: 999px;
-  padding: .95em 1.6em;
+  border: 2px solid var(--ink);
+  border-radius: 0;                       /* brutalist: hard corners only */
+  padding: 1em 1.7em;
   cursor: pointer;
   text-decoration: none;
-  box-shadow: 0 8px 0 rgba(22, 33, 10, .18);
-  animation: bob 1.9s ease-in-out infinite;   /* idles, waiting to be clicked */
-  transition: transform .25s var(--ease-out-back), box-shadow .25s ease;
+  box-shadow: 6px 6px 0 rgba(10, 10, 10, .32);
+  animation: bob 1.9s ease-in-out infinite;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
 }
 @keyframes bob {
   0%, 100% { transform: translateY(0); }
-  50%      { transform: translateY(-9px); }
+  50%      { transform: translateY(-8px); }
 }
+.btn:hover {
+  animation-play-state: paused;
+  background: transparent; color: var(--ink);
+  transform: translate(-2px, -2px);
+  box-shadow: 9px 9px 0 rgba(10, 10, 10, .38);
+}
+.btn:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 rgba(10, 10, 10, .4); }
+.btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 5px; }
+.btn-arrow { transition: transform .2s ease; }
+.btn:hover .btn-arrow { transform: translate(3px, -3px); }
 
-.cue:hover, .btn:hover { animation-play-state: paused; transform: translateY(-4px) scale(1.04); box-shadow: 0 12px 0 rgba(22, 33, 10, .22); }
-.cue:active, .btn:active { transform: translateY(2px) scale(.98); box-shadow: 0 3px 0 rgba(22, 33, 10, .25); }
-.cue:focus-visible, .btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
-
-.cue-arrow { animation: nudge 1.9s ease-in-out infinite; }
-@keyframes nudge { 0%, 100% { transform: translateY(2px); } 50% { transform: translateY(-3px); } }
-
-.btn-arrow { transition: transform .25s var(--ease-out-back); }
-.btn:hover .btn-arrow { transform: translateX(5px); }
-
-/* ---------- vertical build progress (left rail) ---------- */
+/* ---------- vertical build progress ---------- */
 .rail {
   position: fixed;
-  left: 2.4vw; top: 16vh; bottom: 16vh;
-  width: 14px;
-  z-index: 2;
+  left: 2.4vw; top: 18vh; bottom: 18vh;
+  width: 16px;
+  z-index: 4;
   pointer-events: none;
 }
-
-/* Track plus eight tick marks, one per section. */
 .rail-track {
   position: absolute;
-  left: 5px; top: 0; bottom: 0;
-  width: 4px;
-  border-radius: 4px;
-  background:
-    repeating-linear-gradient(to bottom,
-      rgba(22, 33, 10, .38) 0 2px, transparent 2px calc(100% / 7)),
-    rgba(22, 33, 10, .15);
+  left: 3px; top: 0; bottom: 0;
+  width: 10px;
+  border: 2px solid var(--ink);
 }
-
 .rail-fill {
   position: absolute;
-  left: 5px; top: 0; bottom: 0;
-  width: 4px;
-  border-radius: 4px;
-  background: linear-gradient(to top, var(--olive), var(--ink));
+  left: 5px; top: 2px; bottom: 2px;
+  width: 6px;
+  background: var(--ink);
   transform-origin: bottom;
   animation: fillup linear both;
   animation-timeline: --page;
   animation-range: 0% 100%;
 }
-@keyframes fillup { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-
-/* Rides the top of the fill. */
+@keyframes fillup {
+  from { transform: scaleY(1); }   /* top: complete */
+  to   { transform: scaleY(0); }   /* bottom: empty */
+}
 .rail-knob {
   position: absolute;
-  left: 0; width: 14px; height: 14px;
-  border-radius: 50%;
+  left: 0; width: 16px; height: 16px;
   background: var(--ink);
-  border: 3px solid var(--acid);
+  border: 2px solid var(--acid);
   animation: knob linear both;
   animation-timeline: --page;
   animation-range: 0% 100%;
 }
 @keyframes knob {
-  from { bottom: 0; }
-  to   { bottom: calc(100% - 14px); }
+  from { bottom: calc(100% - 16px); }
+  to   { bottom: 0; }
 }
 
 /* ---------- celebration burst ---------- */
 /* Apple's emoji font is proprietary and can't be shipped, so these fall through
    to the visitor's system set — genuine iOS emoji on Apple devices. */
-.burst {
-  position: fixed;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  overflow: hidden;
-}
+.burst { position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
 .emoji {
   position: absolute;
-  bottom: 12%;
+  bottom: 10%;
   font-size: var(--size, 2.2rem);
   line-height: 1;
   will-change: transform, opacity;
@@ -251,33 +257,34 @@ section.in > * { opacity: 1; transform: none; }
   0%   { opacity: 0; transform: translate3d(0, 0, 0) scale(.3) rotate(0deg); }
   12%  { opacity: 1; transform: translate3d(0, -12vh, 0) scale(1.15) rotate(var(--rot, 10deg)); }
   70%  { opacity: 1; }
-  100% { opacity: 0; transform: translate3d(var(--dx, 0), -68vh, 0) scale(.85) rotate(var(--rot, 10deg)); }
+  100% { opacity: 0; transform: translate3d(var(--dx, 0), -70vh, 0) scale(.85) rotate(var(--rot, 10deg)); }
 }
 
 /* ---------- 3D stage ---------- */
 .stage {
   position: fixed;
   top: 0; right: 0;
-  width: 50vw; height: 100%;
-  perspective: 1200px;
+  width: 34vw; height: 100%;
+  perspective: 1300px;
   pointer-events: none;
   display: grid;
-  place-items: center;
+  place-items: center end;                /* pushed toward the right edge */
+  padding-right: 3vw;
 }
 
-/* .rig owns the scroll-driven camera move; .sandwich owns the idle float, so
-   the two transforms never fight over the same property. */
+/* .rig owns the scroll-driven spin; .sandwich owns the idle float, so the two
+   transforms never fight over the same property. */
 .rig {
   position: relative;
-  width: 340px; height: 210px;
+  width: 270px; height: 168px;
   transform-style: preserve-3d;
-  animation: present linear both;
+  animation: spin linear both;
   animation-timeline: --page;
-  animation-range: 78% 100%;
+  animation-range: 0% 100%;
 }
-@keyframes present {
-  from { transform: rotateX(63deg) rotateZ(-18deg) scale(1); }
-  to   { transform: rotateX(49deg) rotateZ(-7deg)  scale(1.1); }
+@keyframes spin {
+  from { transform: rotateX(48deg) rotateZ(700deg) scale(1.02); }  /* top: two turns in */
+  to   { transform: rotateX(64deg) rotateZ(-20deg) scale(.9); }    /* bottom: at rest */
 }
 
 .sandwich {
@@ -286,14 +293,14 @@ section.in > * { opacity: 1; transform: none; }
   animation: float 9s ease-in-out infinite;
 }
 @keyframes float {
-  0%, 100% { transform: translateZ(0) rotateZ(0deg); }
-  50%      { transform: translateZ(16px) rotateZ(2.5deg); }
+  0%, 100% { transform: translateZ(0); }
+  50%      { transform: translateZ(14px); }
 }
 
 .shadow {
   position: absolute;
   left: 6%; right: 6%; top: 18%; bottom: 6%;
-  background: radial-gradient(ellipse at center, rgba(38, 54, 12, .38) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(10, 10, 10, .34) 0%, transparent 70%);
   filter: blur(10px);
   transform: translateZ(-14px);
 }
@@ -305,68 +312,62 @@ section.in > * { opacity: 1; transform: none; }
   animation: land linear both;
   animation-timeline: --page;
 }
-
-/* Measured in Chrome: even in a column-reverse scroller the timeline runs 0% at
-   the visual bottom (where the user lands) to 100% at the top. So ranges read in
-   the same order the user experiences them. */
 @keyframes land {
-  from { opacity: 0; transform: translate3d(58vw, 20vh, var(--z)) rotate(30deg) scale(.7); }
-  55%  { opacity: 1; }
-  to   { opacity: 1; transform: translate3d(0, 0, var(--z)) rotate(0deg) scale(1); }
+  from { opacity: 1; transform: translate3d(0, 0, var(--z)) rotate(0deg) scale(1); }
+  45%  { opacity: 1; }
+  to   { opacity: 0; transform: translate3d(46vw, 18vh, var(--z)) rotate(28deg) scale(.7); }
 }
 
-/* The bottom slice is already on screen when you land — it rises rather than
-   flying in, so the stage is never empty. */
 .bread-bottom {
   --z: 0px;
   background: linear-gradient(150deg, #e8bd80, #c9924f);
-  box-shadow: 0 11px 0 #b47c3d, 0 12px 18px rgba(30, 44, 8, .25);
+  box-shadow: 0 10px 0 #b47c3d, 0 11px 16px rgba(10, 10, 10, .28);
   animation-name: rise;
 }
 @keyframes rise {
-  from { transform: translate3d(0, 24vh, var(--z)) scale(.86); }
-  to   { transform: translate3d(0, 0, var(--z)) scale(1); }
+  from { transform: translate3d(0, 0, var(--z)) scale(1); }
+  to   { transform: translate3d(0, 22vh, var(--z)) scale(.86); }
 }
 
-.lettuce  { --z: 19px; background: linear-gradient(150deg, #4e9c33, #2f6b1d);
+.lettuce  { --z: 17px; background: linear-gradient(150deg, #4e9c33, #2f6b1d);
             border-radius: 48% 42% 50% 44% / 46% 52% 40% 48%;
             box-shadow: 0 6px 0 #255716; }
-.tomato   { --z: 33px; background: linear-gradient(150deg, #e2503a, #b3291f);
+.tomato   { --z: 30px; background: linear-gradient(150deg, #e2503a, #b3291f);
             border-radius: 50%; inset: 4px 12px;
-            box-shadow: 0 7px 0 #921f16; }
-.cheese   { --z: 49px; background: linear-gradient(150deg, #f8c948, #e5a41c);
-            border-radius: 14px;
+            box-shadow: 0 6px 0 #921f16; }
+.cheese   { --z: 44px; background: linear-gradient(150deg, #f8c948, #e5a41c);
+            border-radius: 4px;
             box-shadow: 0 6px 0 #bb8412; }
-.ham      { --z: 64px; background: linear-gradient(150deg, #d98079, #b1524c);
+.ham      { --z: 58px; background: linear-gradient(150deg, #d98079, #b1524c);
             border-radius: 47%;
-            box-shadow: 0 9px 0 #8e3d38; }
-.ketchup  { --z: 80px; background: linear-gradient(150deg, #cf2a1d, #9b1a12);
+            box-shadow: 0 8px 0 #8e3d38; }
+.ketchup  { --z: 72px; background: linear-gradient(150deg, #cf2a1d, #9b1a12);
             inset: 42% 16% 34%; border-radius: 50%;
             box-shadow: 0 4px 0 #7c1410; }
-.bread-top{ --z: 94px; background: linear-gradient(150deg, #eec489, #d29d5b);
+.bread-top{ --z: 85px; background: linear-gradient(150deg, #eec489, #d29d5b);
             border-radius: 52% 52% 44% 44% / 62% 62% 38% 38%;
-            box-shadow: 0 17px 0 #b8813f, 0 20px 26px rgba(30, 44, 8, .28); }
+            box-shadow: 0 15px 0 #b8813f, 0 18px 24px rgba(10, 10, 10, .3); }
 
-/* Each ingredient lands while its own section is centred. */
-.layer[data-step="0"] { animation-range:  0%  9%; }
-.layer[data-step="1"] { animation-range: 14% 23%; }
-.layer[data-step="2"] { animation-range: 27% 36%; }
-.layer[data-step="3"] { animation-range: 39% 48%; }
-.layer[data-step="4"] { animation-range: 52% 61%; }
-.layer[data-step="5"] { animation-range: 64% 73%; }
-.layer[data-step="6"] { animation-range: 77% 86%; }
+/* Ranges run high→low: the first ingredient lands nearest the bottom (100%),
+   the last one nearest the top (0%). */
+.layer[data-step="0"] { animation-range: 91% 100%; }  /* bottom slice */
+.layer[data-step="1"] { animation-range: 77%  86%; }  /* lettuce */
+.layer[data-step="2"] { animation-range: 64%  73%; }  /* tomato  */
+.layer[data-step="3"] { animation-range: 52%  61%; }  /* cheese  */
+.layer[data-step="4"] { animation-range: 39%  48%; }  /* filling */
+.layer[data-step="5"] { animation-range: 27%  36%; }  /* ketchup */
+.layer[data-step="6"] { animation-range: 14%  23%; }  /* top slice */
 
-/* ---------- responsive ---------- */
-@media (max-width: 860px) {
-  .rail { display: none; }          /* laptop-first; the rail needs the margin */
-  .stage { width: 100vw; height: 44vh; }
-  .rig { transform-origin: center; scale: .68; }
-  section { max-width: none; padding-top: 48vh; }
-  section::before { top: 46vh; }
+/* ---------- responsive (laptop-first) ---------- */
+@media (max-width: 900px) {
+  .rail, .frame-tr { display: none; }
+  .stage { width: 100vw; height: 40vh; place-items: center; padding-right: 0; }
+  .rig { scale: .6; }
+  section { max-width: none; padding-top: 44vh; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sandwich, .cue, .btn, .cue-arrow { animation: none; }
+  .sandwich, .btn { animation: none; }
   section > * { opacity: 1; transform: none; transition: none; }
   .layer { animation: none; opacity: 1; transform: translate3d(0, 0, var(--z)); }
   .bg-dim { animation: none; opacity: 0; }

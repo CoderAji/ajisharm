@@ -8,12 +8,22 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🥪</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Newsreader:ital,opsz,wght@0,6..72,200..600;1,6..72,200..600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="bg" aria-hidden="true"><div class="bg-dim"></div><div class="grain"></div></div>
+
+<!-- Fixed chrome: exposed-grid framing, brutalist detailing. -->
+<div class="frame" aria-hidden="true">
+  <span class="frame-tl">AJISHARM<span class="sep">/</span>PERSONAL</span>
+  <span class="frame-tr">
+    <i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i>
+    <i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i>
+  </span>
+  <span class="frame-bl">BUILD<span class="sep">/</span>SCROLL UP</span>
+</div>
 
 <!-- Build progress. Decorative twin of the scroll position, so hidden from AT. -->
 <div class="rail" aria-hidden="true">
@@ -40,57 +50,57 @@
 
 <!-- DOM order == reading order == bottom-to-top on screen. -->
 <main>
-  <section id="s0" data-n="01">
-    <p class="eyebrow">scroll up to build</p>
-    <h1>Ajitesh<br><em>Sharma</em></h1>
+  <section id="s0" data-n="01" data-part="BOTTOM SLICE">
+    <p class="eyebrow">start here</p>
+    <h1>AJITESH<br>SHARMA</h1>
     <p class="lede">Start with the bottom slice. Everything worth having gets stacked on top of it.</p>
-    <button class="cue" type="button" aria-label="Scroll up to begin">
-      <span class="cue-arrow">↑</span><span class="cue-label">build it</span>
+    <button class="btn" type="button" aria-label="Scroll up to begin">
+      <span>BUILD IT</span><span class="btn-arrow">↑</span>
     </button>
   </section>
 
-  <section id="s1" data-n="02">
-    <p class="eyebrow">lettuce</p>
-    <h2 class="f-b">The<br>green<br>bit</h2>
+  <section id="s1" data-n="02" data-part="LETTUCE">
+    <p class="eyebrow">layer two</p>
+    <h2 class="wide">THE<br>GREEN<br>BIT</h2>
     <p class="lede">Placeholder — your text goes here.</p>
   </section>
 
-  <section id="s2" data-n="03">
-    <p class="eyebrow">tomato</p>
-    <h2 class="f-a">Something<br><em>juicy</em></h2>
+  <section id="s2" data-n="03" data-part="TOMATO">
+    <p class="eyebrow">layer three</p>
+    <h2>SOMETHING<br>JUICY</h2>
     <p class="lede">Placeholder.</p>
   </section>
 
-  <section id="s3" data-n="04">
-    <p class="eyebrow">cheese</p>
-    <h2 class="f-c">The part<br>that melts</h2>
+  <section id="s3" data-n="04" data-part="CHEESE">
+    <p class="eyebrow">layer four</p>
+    <h2 class="narrow">THE PART<br>THAT MELTS</h2>
     <p class="lede">Placeholder.</p>
   </section>
 
-  <section id="s4" data-n="05">
-    <p class="eyebrow">the filling</p>
-    <h2 class="f-b">Substance</h2>
+  <section id="s4" data-n="05" data-part="FILLING">
+    <p class="eyebrow">layer five</p>
+    <h2>SUBSTANCE</h2>
     <p class="lede">Placeholder.</p>
   </section>
 
-  <section id="s5" data-n="06">
-    <p class="eyebrow">ketchup</p>
-    <h2 class="f-a"><em>Flourish</em></h2>
+  <section id="s5" data-n="06" data-part="KETCHUP">
+    <p class="eyebrow">layer six</p>
+    <h2 class="wide">FLOURISH</h2>
     <p class="lede">Placeholder.</p>
   </section>
 
-  <section id="s6" data-n="07">
-    <p class="eyebrow">top slice</p>
-    <h2 class="f-c">Close it up</h2>
+  <section id="s6" data-n="07" data-part="TOP SLICE">
+    <p class="eyebrow">layer seven</p>
+    <h2 class="narrow">CLOSE<br>IT UP</h2>
     <p class="lede">Placeholder.</p>
   </section>
 
-  <section id="s7" data-n="08" class="finale">
-    <p class="eyebrow">complete</p>
-    <h2 class="f-a">Made<br>it.</h2>
+  <section id="s7" data-n="08" data-part="COMPLETE" class="finale">
+    <p class="eyebrow">assembled</p>
+    <h2>MADE IT.</h2>
     <p class="lede">Placeholder — closing line, links, contact.</p>
     <a class="btn" href="mailto:sharmaa.sks@gmail.com">
-      <span>Say hello</span><span class="btn-arrow">→</span>
+      <span>SAY HELLO</span><span class="btn-arrow">→</span>
     </a>
   </section>
 </main>
