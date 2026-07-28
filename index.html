@@ -6,66 +6,92 @@
 <title>ajisharm</title>
 <meta name="description" content="Ajitesh Sharma — personal site. Scroll up.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🥪</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Newsreader:ital,opsz,wght@0,6..72,200..600;1,6..72,200..600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- Fixed 3D stage. Layers stack along Z as you scroll up. -->
+<div class="bg" aria-hidden="true"><div class="bg-dim"></div><div class="grain"></div></div>
+
+<!-- Build progress. Decorative twin of the scroll position, so hidden from AT. -->
+<div class="rail" aria-hidden="true">
+  <div class="rail-track"></div>
+  <div class="rail-fill"></div>
+  <div class="rail-knob"></div>
+</div>
+
+<!-- Fixed 3D stage. Layers stack along Z as the sandwich is assembled. -->
 <div class="stage" aria-hidden="true">
-  <div class="sandwich">
-    <div class="layer bun-bottom" data-step="0"></div>
-    <div class="layer lettuce"    data-step="1"></div>
-    <div class="layer tomato"     data-step="2"></div>
-    <div class="layer cheese"     data-step="3"></div>
-    <div class="layer patty"      data-step="4"></div>
-    <div class="layer ketchup"    data-step="5"></div>
-    <div class="layer bun-top"    data-step="6"></div>
+  <div class="rig">
+    <div class="shadow"></div>
+    <div class="sandwich">
+      <div class="layer bread-bottom" data-step="0"></div>
+      <div class="layer lettuce"      data-step="1"></div>
+      <div class="layer tomato"       data-step="2"></div>
+      <div class="layer cheese"       data-step="3"></div>
+      <div class="layer ham"          data-step="4"></div>
+      <div class="layer ketchup"      data-step="5"></div>
+      <div class="layer bread-top"    data-step="6"></div>
+    </div>
   </div>
-  <div class="bite bite-a"></div>
-  <div class="bite bite-b"></div>
 </div>
 
 <!-- DOM order == reading order == bottom-to-top on screen. -->
 <main>
-  <section id="s0">
-    <p class="kicker">scroll up</p>
-    <h1>Ajitesh Sharma</h1>
-    <p>Bottom slice is down. Everything else is above you.</p>
+  <section id="s0" data-n="01">
+    <p class="eyebrow">scroll up to build</p>
+    <h1>Ajitesh<br><em>Sharma</em></h1>
+    <p class="lede">Start with the bottom slice. Everything worth having gets stacked on top of it.</p>
+    <button class="cue" type="button" aria-label="Scroll up to begin">
+      <span class="cue-arrow">↑</span><span class="cue-label">build it</span>
+    </button>
   </section>
 
-  <section id="s1">
-    <h2>Lettuce</h2>
-    <p>Placeholder. Text and images go here.</p>
+  <section id="s1" data-n="02">
+    <p class="eyebrow">lettuce</p>
+    <h2 class="f-b">The<br>green<br>bit</h2>
+    <p class="lede">Placeholder — your text goes here.</p>
   </section>
 
-  <section id="s2">
-    <h2>Tomato</h2>
-    <p>Placeholder.</p>
+  <section id="s2" data-n="03">
+    <p class="eyebrow">tomato</p>
+    <h2 class="f-a">Something<br><em>juicy</em></h2>
+    <p class="lede">Placeholder.</p>
   </section>
 
-  <section id="s3">
-    <h2>Cheese</h2>
-    <p>Placeholder.</p>
+  <section id="s3" data-n="04">
+    <p class="eyebrow">cheese</p>
+    <h2 class="f-c">The part<br>that melts</h2>
+    <p class="lede">Placeholder.</p>
   </section>
 
-  <section id="s4">
-    <h2>The good part</h2>
-    <p>Placeholder.</p>
+  <section id="s4" data-n="05">
+    <p class="eyebrow">the filling</p>
+    <h2 class="f-b">Substance</h2>
+    <p class="lede">Placeholder.</p>
   </section>
 
-  <section id="s5">
-    <h2>Ketchup</h2>
-    <p>Placeholder.</p>
+  <section id="s5" data-n="06">
+    <p class="eyebrow">ketchup</p>
+    <h2 class="f-a"><em>Flourish</em></h2>
+    <p class="lede">Placeholder.</p>
   </section>
 
-  <section id="s6">
-    <h2>Top slice</h2>
-    <p>Placeholder.</p>
+  <section id="s6" data-n="07">
+    <p class="eyebrow">top slice</p>
+    <h2 class="f-c">Close it up</h2>
+    <p class="lede">Placeholder.</p>
   </section>
 
-  <section id="s7" class="end">
-    <h2>Gone.</h2>
-    <p>Check the tab.</p>
+  <section id="s7" data-n="08" class="finale">
+    <p class="eyebrow">complete</p>
+    <h2 class="f-a">Made<br>it.</h2>
+    <p class="lede">Placeholder — closing line, links, contact.</p>
+    <a class="btn" href="mailto:sharmaa.sks@gmail.com">
+      <span>Say hello</span><span class="btn-arrow">→</span>
+    </a>
   </section>
 </main>
 
