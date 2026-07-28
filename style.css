@@ -59,7 +59,7 @@ html, body {
 /* ---------- progress ring + sandwich, fused ---------- */
 .badge {
   position: fixed;
-  left: 3.2vw; top: 3vh;
+  right: 3.2vw; top: calc(3vh + 2.6rem);
   width: var(--badge); height: var(--badge);
   z-index: 3;
   pointer-events: none;
@@ -177,7 +177,8 @@ html, body {
 /* ---------- hand-drawn scroll cue ---------- */
 .cue {
   position: fixed;
-  left: 4.5vw; bottom: 6vh;
+  left: 50%; bottom: 4vh;
+  translate: -50% 0;
   z-index: 4;
   pointer-events: none;
   text-align: center;
@@ -186,7 +187,7 @@ html, body {
   animation-range: 97% 100%;   /* tight range = near-instant exit */
 }
 @keyframes cuefade {
-  from { transform: translateX(-190%); opacity: 0; }  /* climbing: swept off left */
+  from { transform: translateX(-72vw); opacity: 0; }   /* climbing: swept off left */
   to   { transform: translateX(0);     opacity: 1; }  /* at the bottom: in place */
 }
 
@@ -196,10 +197,10 @@ html, body {
   50%      { transform: translateY(-14px) rotate(1deg); }
 }
 
-.cue-arrow { width: 40px; height: 88px; display: block; margin: 0 auto; }
+.cue-arrow { width: 26px; height: 58px; display: block; margin: 0 auto; }
 .ink {
   stroke: var(--ink);
-  stroke-width: 3.4;
+  stroke-width: 4.2;
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-dasharray: 100;
@@ -216,8 +217,8 @@ html, body {
 .cue-text {
   font-family: var(--hand);
   font-weight: 700;
-  font-size: 1.9rem;
-  margin: .1em 0 0;
+  font-size: 1.3rem;
+  margin: .05em 0 0;
   transform: rotate(-3deg);
 }
 
@@ -317,8 +318,8 @@ section.in > * { opacity: 1; transform: none; }
 .btn:hover .btn-arrow { transform: translate(3px, -3px); }
 
 /* ---------- section index (top right) ----------
-   Shows only the current section. At the top it swaps for the full list: the
-   pill slides out left, the list slides in from the right. */
+   Reads as a single line of text naming the current section. At the top it
+   wipes open leftwards into the full list, laid out horizontally. */
 .nav {
   position: fixed;
   right: 3.2vw; top: 3vh;
@@ -328,54 +329,73 @@ section.in > * { opacity: 1; transform: none; }
   letter-spacing: .12em;
   text-transform: uppercase;
   text-align: right;
+  height: 1.5rem;
 }
 
 .nav-current {
   display: inline-flex;
   align-items: center;
   gap: .7em;
+  height: 1.5rem;
+  overflow: hidden;              /* clips the label roll */
   font: inherit;
   letter-spacing: inherit;
   text-transform: inherit;
   color: var(--ink);
   background: transparent;
-  border: 1.5px solid var(--ink);
-  border-radius: 0;
-  padding: .55rem .85rem;
+  border: 0;                     /* no box — just the words */
+  padding: 0;
   cursor: pointer;
-  transition: transform .3s cubic-bezier(.4, 0, .2, 1), opacity .2s ease,
-              background .2s ease, color .2s ease;
+  transition: opacity .22s ease, transform .3s cubic-bezier(.4, 0, .2, 1);
 }
-.nav-current:hover { background: var(--ink); color: var(--acid); }
-.nav-current:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+.nav-current:hover { opacity: .6; }
+.nav-current:focus-visible { outline: 2px solid var(--ink); outline-offset: 5px; }
 .nav-k { opacity: .55; }
-.nav-caret { font-size: .8em; transition: transform .3s ease; }
 
+/* Label change rolls out and back in rather than cutting. */
+.nav-current.swap .nav-k, .nav-current.swap .nav-label { animation: roll .34s ease both; }
+.nav-current.swap .nav-label { animation-delay: .04s; }
+@keyframes roll {
+  0%   { transform: translateY(0);     opacity: 1; }
+  42%  { transform: translateY(-105%); opacity: 0; }
+  58%  { transform: translateY(105%);  opacity: 0; }
+  100% { transform: translateY(0);     opacity: 1; }
+}
+
+/* Horizontal list, anchored right, wiping open to the left. */
 .nav-list {
   position: absolute;
   right: 0; top: 0;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 1.05rem;
   list-style: none;
   margin: 0; padding: 0;
-  opacity: 0;
-  transform: translateX(30px);
+  white-space: nowrap;
+  clip-path: inset(0 0 0 100%);
   pointer-events: none;
-  transition: opacity .24s ease, transform .34s cubic-bezier(.34, 1.15, .5, 1);
+  transition: clip-path .55s cubic-bezier(.5, 0, .2, 1);
+}
+.nav-list li {
+  opacity: 0;
+  transform: translateX(16px);
+  transition: opacity .3s ease, transform .38s cubic-bezier(.34, 1.15, .5, 1);
+  transition-delay: calc(var(--j, 0) * 45ms);
 }
 .nav-list a {
-  display: block;
-  padding: .2rem 0;
   color: var(--ink);
   text-decoration: none;
-  opacity: .5;
-  transition: opacity .2s ease, transform .2s ease;
+  opacity: .55;
+  transition: opacity .2s ease;
 }
-.nav-list a::before { content: attr(data-k) "  "; opacity: .55; }
-.nav-list a:hover, .nav-list a:focus-visible { opacity: 1; transform: translateX(-4px); }
+.nav-list a::before { content: attr(data-k) " "; opacity: .5; }
+.nav-list a:hover, .nav-list a:focus-visible { opacity: 1; }
 .nav-list a.here { opacity: 1; font-weight: 500; }
 
-.nav.open .nav-current { opacity: 0; transform: translateX(-36px); pointer-events: none; }
-.nav.open .nav-caret { transform: rotate(180deg); }
-.nav.open .nav-list { opacity: 1; transform: none; pointer-events: auto; }
+.nav.open .nav-current { opacity: 0; transform: translateX(-28px); pointer-events: none; }
+.nav.open .nav-list { clip-path: inset(0 0 0 0); pointer-events: auto; }
+.nav.open .nav-list li { opacity: 1; transform: none; }
 
 /* ---------- content blocks ---------- */
 .sub { max-width: 46ch; margin: 0 0 .9rem; font-size: 1rem; }
@@ -426,7 +446,7 @@ section.in > * { opacity: 1; transform: none; }
 /* Anchored on the badge so the celebration reads as coming from the sandwich. */
 .burst {
   position: fixed;
-  left: 3.2vw; top: 3vh;
+  right: 3.2vw; top: calc(3vh + 2.6rem);
   width: var(--badge); height: var(--badge);
   z-index: 5;
   pointer-events: none;

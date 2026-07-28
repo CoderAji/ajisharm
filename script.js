@@ -44,15 +44,21 @@ const reveal = new IntersectionObserver(entries => {
 
     const link = navLinks.find(a => a.hash === "#" + e.target.id);
     navLinks.forEach(a => a.classList.toggle("here", a === link));
-    if (link) {
-      navK.textContent = link.dataset.k;
-      navLabel.textContent = link.textContent;
-    }
+    if (link) rollTo(link.dataset.k, link.textContent);
 
     // The full list takes over once the sandwich is finished.
     setNav(e.target.id === "#s9".slice(1) || navPinned);
   }
 }, { threshold: 0.35 });
+
+// Roll the old label out and the new one in instead of swapping instantly.
+function rollTo(k, text) {
+  if (navLabel.textContent === text) return;
+  navBtn.classList.remove("swap");
+  void navBtn.offsetWidth;                 // restart the animation
+  navBtn.classList.add("swap");
+  setTimeout(() => { navK.textContent = k; navLabel.textContent = text; }, 150);
+}
 
 function setNav(open) {
   nav.classList.toggle("open", open);
@@ -61,6 +67,9 @@ function setNav(open) {
 
 navBtn.addEventListener("click", () => { navPinned = !nav.classList.contains("open"); setNav(navPinned); });
 navLinks.forEach(a => a.addEventListener("click", () => { navPinned = false; }));
+
+// Stagger index so the horizontal list unfurls right to left.
+navLinks.forEach((a, j) => a.parentElement.style.setProperty("--j", j));
 
 sections.forEach(s => reveal.observe(s));
 
