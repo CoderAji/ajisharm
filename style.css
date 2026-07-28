@@ -184,11 +184,11 @@ html, body {
   text-align: center;
   animation: cuefade linear both;
   animation-timeline: --page;
-  animation-range: 97% 100%;   /* tight range = near-instant exit */
+  animation-range: 96% 100%;   /* tight range = near-instant drop */
 }
 @keyframes cuefade {
-  from { transform: translateX(-72vw); opacity: 0; }   /* climbing: swept off left */
-  to   { transform: translateX(0);     opacity: 1; }  /* at the bottom: in place */
+  from { transform: translateY(42vh) rotate(14deg); opacity: 0; }  /* climbing: dropped away */
+  to   { transform: translateY(0)    rotate(0deg);  opacity: 1; }  /* at the bottom: in place */
 }
 
 .cue-bounce { animation: hop 1.5s cubic-bezier(.5,0,.5,1) infinite; }
