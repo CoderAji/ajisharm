@@ -16,18 +16,22 @@
 <div class="bg" aria-hidden="true"><div class="bg-dim"></div><div class="grain"></div></div>
 
 <!-- Section index so visitors can jump instead of scrolling the whole stack. -->
+<!-- Section index: shows only where you are, then opens to the full list at the top. -->
 <nav class="nav" aria-label="Sections">
-  <ol>
-    <li><a href="#s9" data-k="10">Contact</a></li>
-    <li><a href="#s8" data-k="09">Principles</a></li>
-    <li><a href="#s7" data-k="08">Questions</a></li>
-    <li><a href="#s6" data-k="07">Learned</a></li>
-    <li><a href="#s5" data-k="06">Timeline</a></li>
-    <li><a href="#s4" data-k="05">Experiments</a></li>
-    <li><a href="#s3" data-k="04">Arkire</a></li>
-    <li><a href="#s2" data-k="03">Right Now</a></li>
-    <li><a href="#s1" data-k="02">Why I Build</a></li>
-    <li><a href="#s0" data-k="01">Home</a></li>
+  <button class="nav-current" type="button" aria-expanded="false" aria-controls="navlist">
+    <span class="nav-k">01</span><span class="nav-label">home</span><span class="nav-caret">▾</span>
+  </button>
+  <ol class="nav-list" id="navlist">
+    <li><a href="#s9" data-k="10">contact</a></li>
+    <li><a href="#s8" data-k="09">principles</a></li>
+    <li><a href="#s7" data-k="08">questions</a></li>
+    <li><a href="#s6" data-k="07">learned</a></li>
+    <li><a href="#s5" data-k="06">timeline</a></li>
+    <li><a href="#s4" data-k="05">experiments</a></li>
+    <li><a href="#s3" data-k="04">arkire</a></li>
+    <li><a href="#s2" data-k="03">right now</a></li>
+    <li><a href="#s1" data-k="02">why i build</a></li>
+    <li><a href="#s0" data-k="01">home</a></li>
   </ol>
 </nav>
 

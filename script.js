@@ -1,6 +1,11 @@
 const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const sections = [...document.querySelectorAll("section")];
-const navLinks = [...document.querySelectorAll(".nav a")];
+const nav = document.querySelector(".nav");
+const navLinks = [...document.querySelectorAll(".nav-list a")];
+const navBtn = document.querySelector(".nav-current");
+const navK = document.querySelector(".nav-k");
+const navLabel = document.querySelector(".nav-label");
+let navPinned = false;   // set when the user opens it by hand
 
 // Stagger index for each section's entrance animation.
 sections.forEach(sec => [...sec.children].forEach((el, i) => el.style.setProperty("--i", i)));
@@ -36,9 +41,26 @@ const reveal = new IntersectionObserver(entries => {
   for (const e of entries) {
     if (!e.isIntersecting) continue;
     e.target.classList.add("in");
-    navLinks.forEach(a => a.classList.toggle("here", a.hash === "#" + e.target.id));
+
+    const link = navLinks.find(a => a.hash === "#" + e.target.id);
+    navLinks.forEach(a => a.classList.toggle("here", a === link));
+    if (link) {
+      navK.textContent = link.dataset.k;
+      navLabel.textContent = link.textContent;
+    }
+
+    // The full list takes over once the sandwich is finished.
+    setNav(e.target.id === "#s9".slice(1) || navPinned);
   }
 }, { threshold: 0.35 });
+
+function setNav(open) {
+  nav.classList.toggle("open", open);
+  navBtn.setAttribute("aria-expanded", String(open));
+}
+
+navBtn.addEventListener("click", () => { navPinned = !nav.classList.contains("open"); setNav(navPinned); });
+navLinks.forEach(a => a.addEventListener("click", () => { navPinned = false; }));
 
 sections.forEach(s => reveal.observe(s));
 
