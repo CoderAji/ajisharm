@@ -149,30 +149,27 @@ html, body {
             border-radius: 3px; box-shadow: 0 2px 0 #bb8412; }
 .ham      { --z: 12px; background: linear-gradient(150deg, #d98079, #b1524c);
             border-radius: 47%; box-shadow: 0 3px 0 #8e3d38; }
-.onion    { --z: 15px; background: linear-gradient(150deg, #c9a4d6, #9a6fb0);
-            border-radius: 50%; inset: 3px 10px; box-shadow: 0 2px 0 #7d5591; }
-.pickle   { --z: 18px; background: linear-gradient(150deg, #8fae3a, #5f7a1e);
+.pickle   { --z: 15px; background: linear-gradient(150deg, #8fae3a, #5f7a1e);
             border-radius: 50%; inset: 6px 20px; box-shadow: 0 2px 0 #4a6117; }
-.ketchup  { --z: 21px; background: linear-gradient(150deg, #cf2a1d, #9b1a12);
+.ketchup  { --z: 18px; background: linear-gradient(150deg, #cf2a1d, #9b1a12);
             inset: 42% 16% 34%; border-radius: 50%; box-shadow: 0 2px 0 #7c1410; }
-.avocado  { --z: 24px; background: linear-gradient(150deg, #a8c96a, #6f8f3c);
+.avocado  { --z: 21px; background: linear-gradient(150deg, #a8c96a, #6f8f3c);
             border-radius: 46% 50% 44% 48% / 48% 44% 52% 46%; box-shadow: 0 2px 0 #566f2b; }
-.bread-top{ --z: 28px; background: linear-gradient(150deg, #eec489, #d29d5b);
+.bread-top{ --z: 25px; background: linear-gradient(150deg, #eec489, #d29d5b);
             border-radius: 52% 52% 44% 44% / 62% 62% 38% 38%;
             box-shadow: 0 6px 0 #b8813f, 0 8px 11px rgba(10,10,10,.28); }
 
-/* Ten sections, ten layers. First lands nearest the bottom (100%), last nearest
-   the top (0%) — each one arrives while its own section is on screen. */
+/* Nine sections, nine layers. First lands nearest the bottom (100%), last
+   nearest the top (0%) — each arrives while its own section is on screen. */
 .layer[data-step="0"] { animation-range: 92% 100%; }
-.layer[data-step="1"] { animation-range: 82%  90%; }
-.layer[data-step="2"] { animation-range: 72%  80%; }
-.layer[data-step="3"] { animation-range: 62%  70%; }
-.layer[data-step="4"] { animation-range: 52%  60%; }
-.layer[data-step="5"] { animation-range: 42%  50%; }
-.layer[data-step="6"] { animation-range: 32%  40%; }
-.layer[data-step="7"] { animation-range: 22%  30%; }
-.layer[data-step="8"] { animation-range: 12%  20%; }
-.layer[data-step="9"] { animation-range:  2%  10%; }
+.layer[data-step="1"] { animation-range: 81%  89%; }
+.layer[data-step="2"] { animation-range: 70%  78%; }
+.layer[data-step="3"] { animation-range: 59%  67%; }
+.layer[data-step="4"] { animation-range: 48%  56%; }
+.layer[data-step="5"] { animation-range: 37%  45%; }
+.layer[data-step="6"] { animation-range: 26%  34%; }
+.layer[data-step="7"] { animation-range: 15%  23%; }
+.layer[data-step="8"] { animation-range:  3%  11%; }
 
 /* ---------- hand-drawn scroll cue ---------- */
 .cue {
@@ -245,7 +242,7 @@ section {
 
 /* Hairline boxed cell above each headline, lifted from the reference's grid. */
 section::before {
-  content: attr(data-n) " / 10 · " attr(data-part);
+  content: attr(data-n) " / 09 · " attr(data-part);
   font-family: var(--mono);
   font-size: .66rem;
   letter-spacing: .2em;
@@ -397,6 +394,51 @@ section.in > * { opacity: 1; transform: none; }
 .nav.open .nav-list { clip-path: inset(0 0 0 0); pointer-events: auto; }
 .nav.open .nav-list li { opacity: 1; transform: none; }
 
+/* ---------- 'this is my stuff' ---------- */
+.stuff-head { margin-bottom: .1em; }
+
+.down-arrow {
+  width: clamp(38px, 3.4vw, 54px);
+  height: auto;
+  overflow: visible;
+  margin: 0 0 1.1rem 1.5rem;
+  rotate: -4deg;
+}
+.down-arrow .ink { stroke-width: 4.2; }
+
+.stuff {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.2rem;
+  max-width: 62rem;
+}
+.thing {
+  margin: 0;
+  border: 2px solid var(--ink);
+  background: rgba(255, 255, 255, .12);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.thing:hover { transform: translate(-3px, -3px); box-shadow: 7px 7px 0 rgba(10, 10, 10, .3); }
+.thing img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-bottom: 2px solid var(--ink);
+}
+.thing figcaption { padding: .8rem .9rem; }
+.thing b {
+  display: block;
+  font-family: var(--mono);
+  font-size: .74rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  margin-bottom: .3rem;
+}
+.thing span { font-size: .92rem; }
+/* Slot left when an image hasn't been added yet. */
+.thing.noimg figcaption { border-top: 2px dashed rgba(10, 10, 10, .35); }
+
 /* ---------- content blocks ---------- */
 .sub { max-width: 46ch; margin: 0 0 .9rem; font-size: 1rem; }
 .sub b { font-weight: 700; }
@@ -431,6 +473,10 @@ section.in > * { opacity: 1; transform: none; }
 .skills div { border-top: 1.5px solid var(--ink); padding-top: .6rem; }
 .skills b { display: block; font-family: var(--mono); font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; margin-bottom: .3rem; }
 .skills span { font-size: .92rem; }
+
+.btn.icon { gap: .65em; }
+.btn.icon svg { width: 1.15em; height: 1.15em; flex: none; }
+.social { gap: .6rem; }
 
 .btn.ghost {
   background: transparent;
@@ -549,19 +595,22 @@ body.intro .cue, body.intro .nav, body.intro .badge { opacity: 0 !important; }
 body.intro .spatula {
   display: block;
   position: fixed;
-  left: 44%; bottom: 0;
-  width: clamp(84px, 8vw, 120px);
+  left: 50%; bottom: 4vh;
+  width: clamp(150px, 15vw, 230px);   /* rotated flat, so this reads as length */
+  transform-origin: 50% 80%;
   z-index: 6;
   pointer-events: none;
   animation: sweep 2.9s cubic-bezier(.3, 0, .3, 1) both;
 }
 body.intro .spatula svg { width: 100%; height: auto; display: block; }
+/* Comes in flat along the bottom edge and flicks upward, staying below the
+   card so it never crosses the UI. */
 @keyframes sweep {
-  0%, 58%  { transform: translate(-45%, 120%) rotate(-30deg); opacity: 0; }
-  62%      { transform: translate(-28%, 62%)  rotate(-18deg); opacity: 1; }
-  74%      { transform: translate(2%, -30%)   rotate(8deg);   opacity: 1; }
-  86%      { transform: translate(28%, -125%) rotate(24deg);  opacity: 0; }
-  100%     { transform: translate(28%, -125%) rotate(24deg);  opacity: 0; }
+  0%, 56%  { transform: translate(-125%, 40%) rotate(-104deg); opacity: 0; }
+  61%      { transform: translate(-70%, 18%)  rotate(-100deg); opacity: 1; }
+  70%      { transform: translate(-50%, 0%)   rotate(-92deg);  opacity: 1; }
+  79%      { transform: translate(-40%, -6%)  rotate(-62deg);  opacity: 1; }
+  90%,100% { transform: translate(30%, 55%)   rotate(-30deg);  opacity: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -612,11 +661,10 @@ body.intro .spatula svg { width: 100%; height: auto; display: block; }
 }
 
 /* ---------- fire cursor ----------
-   A drawn black flame rather than the emoji: 20px matches the default arrow,
-   and a vector path rasterises identically everywhere instead of depending on
-   the visitor's emoji font. Same size on interactive elements — the buttons
-   already invert on hover, so the cursor doesn't need to carry that signal. */
+   A drawn flame with a tip and an inner tongue — the earlier teardrop read as a
+   blob. Vector rather than emoji so it rasterises identically everywhere, at
+   20px to match the default arrow. */
 body,
-.btn, .nav-current, .nav-list a, a, button, .cards li {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath fill='%230a0a0a' d='M10 18.6c-3.6 0-6.5-2.7-6.5-6.2 0-3.5 2.7-5.5 4-8.4.5-1.1 2.1-1 2.4.2.4 1.6 1.1 2.6 2.2 3.9 1.7 2 4.4 3.6 4.4 6.4 0 3.4-2.9 6.1-6.5 6.1z'/%3E%3C/svg%3E") 8 2, auto;
+.btn, .nav-current, .nav-list a, a, button, .cards li, .thing {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath fill='%230a0a0a' d='M13.4 1.6c-.4-.4-1.1-.2-1.2.4-.3 2.3-1.5 3.9-3 5.4C7.4 9.2 5.5 11 5.5 14a6.5 6.5 0 0 0 13 0c0-2.4-1.1-4-2.3-5.4-.4-.5-1.2-.2-1.2.4 0 .9-.3 1.6-.9 2.1.5-3.5-.3-6.9-.7-9.5z'/%3E%3C/svg%3E") 9 2, auto;
 }
