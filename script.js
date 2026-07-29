@@ -70,7 +70,7 @@ const reveal = new IntersectionObserver(entries => {
     if (link) rollTo(link.dataset.k, link.textContent);
 
     // The full list takes over once the sandwich is finished.
-    setNav(e.target.id === "s8" || navPinned);
+    setNav(e.target.id === "s5" || navPinned);
   }
 }, { threshold: 0.35 });
 
@@ -133,7 +133,15 @@ new IntersectionObserver(([e], obs) => {
   document.title = "sandwich complete";
   if (!reduced) celebrate();
   obs.disconnect();
-}, { threshold: 0.9 }).observe(document.querySelector("#s8"));
+}, { threshold: 0.9 }).observe(document.querySelector("#s5"));
+
+// The "right now" photo is optional too.
+const nowImg = document.querySelector(".now-photo img");
+if (nowImg) {
+  const collapse = () => nowImg.closest(".now")?.classList.add("noimg");
+  if (nowImg.complete && nowImg.naturalWidth === 0) collapse();
+  else nowImg.addEventListener("error", collapse);
+}
 
 // The hero photo is optional — drop me.png in the project root to switch it on.
 const photo = document.querySelector(".me img");
@@ -146,11 +154,7 @@ if (photo) {
 // Project images are optional too: an empty slot keeps its caption card.
 // A 404 can fire before this script runs, so check the already-settled state
 // as well as listening for future failures.
-function dropImage(img) {
-  img.closest(".thing").classList.add("noimg");
-  img.remove();
-}
 document.querySelectorAll(".thing img").forEach(img => {
-  if (img.complete && img.naturalWidth === 0) dropImage(img);
-  else img.addEventListener("error", () => dropImage(img));
+  if (img.complete && img.naturalWidth === 0) img.remove();
+  else img.addEventListener("error", () => img.remove());
 });
