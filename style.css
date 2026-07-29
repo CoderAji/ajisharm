@@ -236,20 +236,22 @@ section {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 16vh 5vw 12vh 6vw;
+  padding: 11vh 5vw 9vh 6vw;
   position: relative;
 }
 
 /* Hairline boxed cell above each headline, lifted from the reference's grid. */
 section::before {
   content: attr(data-n) " / 09 · " attr(data-part);
-  font-family: var(--mono);
-  font-size: .66rem;
-  letter-spacing: .2em;
-  padding: .55rem .9rem;
-  margin-bottom: 1.4rem;
-  border: 1.5px solid var(--ink);
+  font-family: var(--hand);
+  font-weight: 700;
+  font-size: clamp(1.1rem, 1.4vw, 1.45rem);
+  letter-spacing: .01em;
+  text-transform: lowercase;
+  opacity: .7;
+  margin-bottom: .6rem;
   align-self: flex-start;
+  rotate: -1.2deg;
 }
 
 /* ---------- type ---------- */
@@ -267,9 +269,7 @@ h1, h2 {
 .lede {
   font-size: clamp(1rem, 1.25vw, 1.2rem);
   max-width: 38ch;
-  margin: 1rem 0 2rem;
-  border-top: 1.5px solid var(--ink);
-  padding-top: 1rem;
+  margin: .3rem 0 1.8rem;
 }
 
 /* ---------- microinteractions ---------- */
@@ -438,6 +438,42 @@ section.in > * { opacity: 1; transform: none; }
 .thing span { font-size: .92rem; }
 /* Slot left when an image hasn't been added yet. */
 .thing.noimg figcaption { border-top: 2px dashed rgba(10, 10, 10, .35); }
+
+/* ---------- question + answer ---------- */
+.qa {
+  list-style: none;
+  counter-reset: q;
+  margin: 0;
+  padding: 0;
+  max-width: 66ch;
+  columns: 2;
+  column-gap: 2.6rem;
+}
+.qa li {
+  counter-increment: q;
+  break-inside: avoid;
+  margin: 0 0 1.05rem;
+  border-top: 2px solid var(--ink);
+  padding-top: .55rem;
+}
+.qa h3 {
+  margin: 0 0 .3rem;
+  font-size: .95rem;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  text-transform: lowercase;
+}
+.qa h3::before {
+  content: counter(q, decimal-leading-zero) "  ";
+  font-family: var(--mono);
+  font-weight: 400;
+  opacity: .5;
+}
+.qa p {
+  margin: 0;
+  font-size: .86rem;
+  line-height: 1.5;
+}
 
 /* ---------- content blocks ---------- */
 .sub { max-width: 46ch; margin: 0 0 .9rem; font-size: 1rem; }
