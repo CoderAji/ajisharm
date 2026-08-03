@@ -7,6 +7,7 @@
   --sans:  "Archivo", Helvetica, Arial, sans-serif;
   --hand:  "Caveat", ui-rounded, cursive;
   --badge: clamp(102px, 8.4vw, 122px);
+  --plate-ease: cubic-bezier(.3, .9, .3, 1);
 }
 
 * { box-sizing: border-box; }
@@ -63,6 +64,18 @@ html, body {
   width: var(--badge); height: var(--badge);
   z-index: 3;
   pointer-events: none;
+  transition: width .7s var(--plate-ease), height .7s var(--plate-ease),
+              top .7s var(--plate-ease), right .7s var(--plate-ease),
+              translate .7s var(--plate-ease);
+}
+
+/* Finale: the sandwich is finished, so it stops being a corner badge and takes
+   the empty half of the last screen. --sw keeps the filling in proportion —
+   .rig is a fixed 56x34px, so growing --badge alone would leave it stranded.
+   The two numbers track each other: 30vw / 8.4vw ≈ 3.5. */
+@media (min-width: 901px) {   /* on phones the badge is centred at the top — no empty half to fill */
+  body.plated .badge { --badge: clamp(300px, 30vw, 440px); --sw: 3.5;
+                       right: 6vw; top: 50%; translate: 0 -50%; }
 }
 
 .ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
@@ -90,6 +103,8 @@ html, body {
   display: grid;
   place-items: center;
   perspective: 620px;
+  scale: var(--sw, 1);
+  transition: scale .7s var(--plate-ease);
 }
 
 .rig {
@@ -446,7 +461,7 @@ section.in > * { opacity: 1; transform: none; }
   user-select: none;
   line-height: 1;
 }
-.u1 { left: 38%; top:  2%; font-size: clamp(2.4rem, 3.4vw, 4rem); rotate: -12deg; filter: blur(1.5px); opacity: .48; }
+.u1 { left: 38%; top:  9%; font-size: clamp(2.4rem, 3.4vw, 4rem); rotate: -12deg; filter: blur(1.5px); opacity: .48; }
 .u2 { left: 66%; top: 26%; font-size: clamp(3rem, 4.4vw, 5.2rem); rotate:   8deg; filter: blur(2.2px); opacity: .42; }
 .u3 { left: 84%; top: 62%; font-size: clamp(2rem, 2.8vw, 3.2rem); rotate: -20deg; filter: blur(1.2px); opacity: .52; }
 .u4 { left: 20%; top: 70%; font-size: clamp(2.6rem, 3.8vw, 4.4rem); rotate: 15deg; filter: blur(2.6px); opacity: .4; }
@@ -470,13 +485,15 @@ section.in > * { opacity: 1; transform: none; }
 }
 .fan .ink { stroke-width: 3.4; }
 
-/* Each sits up-left of what it points at. */
-.a1 { left:  2%; top:  1%; rotate:  12deg; }   /* arkire */
-.a3 { left: 33%; top: -7%; rotate:  34deg; }   /* !!! u1 */
-.a4 { left: 58%; top: 10%; rotate:  -6deg; }   /* !!! u2 */
-.a5 { left: 76%; top: 45%; rotate:   8deg; }   /* !!! u3 */
-.a6 { left: 11%; top: 55%; rotate:  -4deg; }   /* !!! u4 */
-.a7 { left: 55%; top: 63%; rotate:  10deg; }   /* !!! u5 */
+/* Each sits up-left of what it points at, tip landing just off the target's
+   left edge. Measured in a browser: nudging these by eye puts the tip through
+   the !!! instead of beside it. */
+.a1 { left:   2%; top:   1%; rotate:  12deg; }   /* arkire */
+.a3 { left: 32.1%; top: -6.5%; rotate:  34deg; }  /* !!! u1 */
+.a4 { left: 58.3%; top: 14.3%; rotate:  -6deg; }  /* !!! u2 */
+.a5 { left: 76.7%; top: 46.7%; rotate:   8deg; }  /* !!! u3 */
+.a6 { left: 12.2%; top: 57.1%; rotate:  -4deg; }  /* !!! u4 */
+.a7 { left: 50.2%; top: 62.1%; rotate:  10deg; }  /* !!! u5 */
   .f3 { left: 46%; top: -3%;  width: clamp(150px, 15vw, 220px); }
 .f4 { left: 30%; top:  6%;  width: clamp(88px, 8.5vw, 122px); }
 .f5 { left: 55%; top:  0%;  width: clamp(130px, 13vw, 190px); }
@@ -666,18 +683,13 @@ section.in .bubbles li { opacity: 1; transform: none; }
   animation-delay: var(--delay, 0s);
   opacity: 0;
 }
+/* Drift left across the page rather than upward — the badge sits top right, so
+   left is where the open space is. */
 @keyframes pop {
   0%   { opacity: 0; transform: translate3d(-50%, 0, 0) scale(.3) rotate(0deg); }
-  15%  { opacity: 1; transform: translate3d(-50%, -5vh, 0) scale(1.1) rotate(var(--rot,10deg)); }
+  15%  { opacity: 1; transform: translate3d(calc(-50% - 3vw), var(--dy, 0), 0) scale(1.1) rotate(var(--rot,10deg)); }
   70%  { opacity: 1; }
-  100% { opacity: 0; transform: translate3d(calc(-50% + var(--dx,0)), -26vh, 0) scale(.8) rotate(var(--rot,10deg)); }
-}
-
-/* ---------- responsive (laptop-first) ---------- */
-@media (max-width: 900px) {
-  .badge { left: 50%; top: 4vh; translate: -50% 0; --badge: 128px; }
-  section { padding: 22vh 6vw 10vh; }
-  h1, h2 { font-size: clamp(2.4rem, 12vw, 4.5rem); }
+  100% { opacity: 0; transform: translate3d(calc(-50% - 34vw), var(--dy, 0), 0) scale(.8) rotate(var(--rot,10deg)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -687,6 +699,7 @@ section.in .bubbles li { opacity: 1; transform: none; }
   .layer { animation: none; opacity: 1; transform: translate3d(0, 0, var(--z)); }
   .bg-dim { animation: none; opacity: 0; }
   .rig { animation: none; transform: rotateX(58deg) rotateZ(-12deg); }
+  .badge, .stage { transition: none; }
 }
 
 /* ============================================================================
@@ -819,3 +832,87 @@ body.intro .spatula svg { width: 100%; height: auto; display: block; }
   text-transform: lowercase;
 }
 
+/* ---------- responsive (laptop-first) ---------- */
+@media (max-width: 900px) {
+  /* Corner, not centre: phone sections scroll past a screen, and a centred
+     badge would sit in the middle of every line of body text on the way past.
+     Inherits right/top from the base rule, just smaller. */
+  .badge { --badge: 88px; }
+  /* The arrows are sized in px but positioned by percentage, so once the
+     collage is narrower than they are they land on top of the !!! instead of
+     beside them. They're decorative — drop them rather than fake a fit. */
+  .stuff .fan { display: none; }
+  section { padding: 22vh 6vw 10vh; }
+  h1, h2 { font-size: clamp(2.4rem, 12vw, 4.5rem); }
+
+  /* Nav opens downward as a stack. The desktop row is anchored right and wipes
+     to the left, which puts every entry off the left edge on a phone. */
+  .nav { font-size: .78rem; }
+  .nav-list {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: right;
+    gap: 0;
+    /* Glass panel. It lives on .nav-list rather than a wrapper so the existing
+       clip-path wipe reveals the panel and its contents together. No outer
+       shadow: clip-path: inset(0) cuts exactly at the border box and would
+       shear it off. */
+    padding: .3rem 1rem;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, .22);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, .4);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55),
+                inset 0 -1px 0 rgba(10, 10, 10, .06);
+    clip-path: inset(0 0 100% 0 round 24px);
+  }
+  .nav.open .nav-list { clip-path: inset(0 0 0 0 round 24px); }
+  .nav-list li { transform: translateY(-8px); }
+  .nav-list a { display: block; padding: .6rem 0; opacity: .8; }   /* 44px tap target */
+
+  /* Hero photo joins the flow instead of floating over the headline. The
+     figure stays a positioning context so the two scribbles still hang off it,
+     pulled inside the edges so they don't run off the screen. */
+  .me {
+    position: relative;
+    right: auto; top: auto; translate: none;
+    width: 100%; max-width: 320px;
+    margin: 2.4rem 0 2.6rem;
+  }
+  .scribble.top    { top: -1.7rem;  left: .4rem; }
+  .scribble.bottom { bottom: -2rem; right: .4rem; }
+
+  /* The scattered collage becomes a stack: card first at full width, then the
+     !!! flow as a loose row. Their per-item sizes and tilts are kept, so it
+     still reads as scribbled rather than listed. */
+  .stuff {
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.1rem 1.5rem;
+  }
+  .stuff .thing {
+    position: relative;                /* keeps the sticker on its corner */
+    left: auto; top: auto;
+    width: 100%;
+    transform: rotate(-1.5deg);
+    margin-bottom: 1.4rem;
+  }
+  .sticker { top: -34px; right: -12px; }
+  .stuff .future, .future-note { position: static; }
+
+  /* Photo above, chips below — and the chips wrap instead of being placed. */
+  .now { grid-template-columns: 1fr; gap: 1.6rem; }
+  .bubbles {
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem .5rem;
+  }
+  .bubbles li { position: static; transform: translateX(-24vw); }
+
+  .qa { columns: 1; }
+  .social-link { padding: .45rem; }    /* 44px tap target around a 30px mark */
+}

@@ -114,19 +114,23 @@ function celebrate() {
   burst.className = "burst";
   burst.setAttribute("aria-hidden", "true");
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 5; i++) {
     const e = document.createElement("span");
     e.className = "emoji";
     e.textContent = FACES[i % FACES.length];
     e.style.cssText = `--size:${1.1 + Math.random() * 1.1}rem;` +
       `--delay:${(Math.random() * 1.4).toFixed(2)}s;--dur:${(2.2 + Math.random() * 1.6).toFixed(2)}s;` +
-      `--dx:${(Math.random() * 90 - 45).toFixed(0)}px;--rot:${(Math.random() * 50 - 25).toFixed(0)}deg`;
+      `--dy:${(Math.random() * 90 - 45).toFixed(0)}px;--rot:${(Math.random() * 50 - 25).toFixed(0)}deg`;
     burst.appendChild(e);
   }
 
   document.body.appendChild(burst);
   setTimeout(() => burst.remove(), 5200);   // ponytail: no cleanup bookkeeping needed
 }
+
+// Finished sandwich moves off the corner and fills the empty half of the finale.
+new IntersectionObserver(([e]) => document.body.classList.toggle("plated", e.isIntersecting),
+  { threshold: 0.6 }).observe(document.querySelector("#s5"));
 
 new IntersectionObserver(([e], obs) => {
   if (!e.isIntersecting) return;
